@@ -9,7 +9,7 @@ import (
 
 func InitDb() *sql.DB {
 	// Code to initialize the database
-	database, err := sql.Open("sqlite3", "src/api/Data/forum.db")
+	database, err := sql.Open("sqlite3", "../api/Data/forum.db")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -21,9 +21,9 @@ func InitDb() *sql.DB {
 		"email" TEXT NOT NULL UNIQUE,
 		"password" BLOB NOT NULL,
 		"Age" INTEGER NOT NULL,
-		"Gender" TEXT NOT NULL
+		"Gender" TEXT NOT NULL,
 		"FirstName" TEXT NOT NULL,
-		"LastName" TEXT NOT NULL,
+		"LastName" TEXT NOT NULL
 	);`
 	_, err = database.Exec(createUserTable)
 	if err != nil {

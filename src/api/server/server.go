@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"log"
 	"net/http"
@@ -21,7 +20,7 @@ type Config struct {
 	WriteTimeout time.Duration
 }
 
-func StartHTTPServer(db *sql.DB) {
+func StartHTTPServer() {
 	// Initialize the templates
 	handlers.InitTemplates()
 	serverConfig := Config{
