@@ -56,11 +56,19 @@ function loadRegisterForm() {
             <input type="password" id="password" name="password" required />
         </div>
         <div>
-            <label for="Age">Age:</label>
+            <label for="First Name">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required />
+        </div>
+        <div>
+            <label for="Last Name">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required />
+        </div>
+        <div>
+            <label for="age">Age:</label>
             <input type="number" id="age" name="age" required />
         </div>
         <div>
-            <label for="Gender">Gender:</label>
+            <label for="gender">Gender:</label>
             <input type="text" id="gender" name="gender" required />
         </div>
         <button type="submit">Register</button>

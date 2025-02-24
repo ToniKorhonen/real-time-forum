@@ -14,16 +14,18 @@ func InitDb() *sql.DB {
 		log.Fatal(err)
 	}
 
+	DB = database
+
 	createUserTable :=
 		`CREATE TABLE IF NOT EXISTS users (
 		"uuid" BLOB NOT NULL PRIMARY KEY UNIQUE,
-		"nickname" TEXT NOT NULL UNIQUE,
+		"username" TEXT NOT NULL UNIQUE,
 		"email" TEXT NOT NULL UNIQUE,
 		"password" BLOB NOT NULL,
-		"Age" INTEGER NOT NULL,
-		"Gender" TEXT NOT NULL,
-		"FirstName" TEXT NOT NULL,
-		"LastName" TEXT NOT NULL
+		"firstName" TEXT NOT NULL,
+		"lastName" TEXT NOT NULL
+		"age" INTEGER NOT NULL,
+		"gender" TEXT NOT NULL,
 	);`
 	_, err = database.Exec(createUserTable)
 	if err != nil {
