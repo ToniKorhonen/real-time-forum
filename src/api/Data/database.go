@@ -23,9 +23,9 @@ func InitDb() *sql.DB {
 		"email" TEXT NOT NULL UNIQUE,
 		"password" BLOB NOT NULL,
 		"firstName" TEXT NOT NULL,
-		"lastName" TEXT NOT NULL
+		"lastName" TEXT NOT NULL,
 		"age" INTEGER NOT NULL,
-		"gender" TEXT NOT NULL,
+		"gender" TEXT NOT NULL
 	);`
 	_, err = database.Exec(createUserTable)
 	if err != nil {

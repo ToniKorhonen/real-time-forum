@@ -42,6 +42,7 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				errorMessages = append(errorMessages, "Invalid age format")
 			}
+
 			ageErrors := middleware.IsValidAge(age)
 			if len(ageErrors) > 0 {
 				errorMessages = append(errorMessages, ageErrors...)
@@ -58,12 +59,15 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 					Age:       age,
 					Gender:    gender,
 				}
-				err := data.InsertUser(&user)
+				err = data.InsertUser(&user)
 				if err != nil {
-					errorMessages = append(errorMessages, err.Error())
-				} else {
-					http.Redirect(w, r, "/login", http.StatusSeeOther)
+					http.Error(w, "Database error: "+err.Error(), http.StatusInternalServerError)
+					return
 				}
+
+				// Success response
+				w.WriteHeader(http.StatusOK)
+				w.Write([]byte("Registration successful"))
 			}
 		}
 	}

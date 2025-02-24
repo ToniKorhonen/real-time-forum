@@ -1,31 +1,64 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
+    // Initialize home page
     loadHomePage();
 
-    document.getElementById('login-link').addEventListener('click', (e) => {
+    // Attach event listeners for persistent navbar links
+    document.getElementById("home-link").addEventListener("click", (e) => {
+        e.preventDefault();
+        loadHomePage();
+    });
+
+    document.getElementById("login-link").addEventListener("click", (e) => {
         e.preventDefault();
         loadLoginForm();
     });
 
-    document.getElementById('register-link').addEventListener('click', (e) => {
+    document.getElementById("register-link").addEventListener("click", (e) => {
         e.preventDefault();
         loadRegisterForm();
     });
+
+    // Handle browser back/forward navigation
+    window.addEventListener("popstate", () => {
+        if (window.location.pathname === "/register") {
+            loadRegisterForm(false); // Do not push state again
+        } else if (window.location.pathname === "/login") {
+            loadLoginForm(false);
+        } else {
+            loadHomePage(false);
+        }
+    });
 });
 
-function loadHomePage() {
-    const app = document.getElementById('app');
+function loadHomePage(pushState = true) {
+    if (pushState) history.pushState({}, "", "/");
+
+    const app = document.getElementById("app");
     app.innerHTML = `
       <h1>Welcome to the Home Page</h1>
       <p>This is a simple homepage</p>
-      <p>Click <a href="#" id="login-link">here</a> to login</p>
-      <p>Click <a href="#" id="register-link">here</a> to register</p>
+      <p>Click <a href="#" id="home-login-link">here</a> to login</p>
+      <p>Click <a href="#" id="home-register-link">here</a> to register</p>
     `;
+
+    // Attach event listeners to dynamically created links
+    document.getElementById("home-login-link").addEventListener("click", (e) => {
+        e.preventDefault();
+        loadLoginForm();
+    });
+
+    document.getElementById("home-register-link").addEventListener("click", (e) => {
+        e.preventDefault();
+        loadRegisterForm();
+    });
 }
 
-function loadLoginForm() {
-    const app = document.getElementById('app');
+function loadLoginForm(pushState = true) {
+    if (pushState) history.pushState({}, "", "/login");
+
+    const app = document.getElementById("app");
     app.innerHTML = `
-      <form id="login-form" method="POST" action="/login">
+      <form id="login-form">
         <div>
             <label for="username_or_email">Username or Email:</label>
             <input type="text" id="username_or_email" name="username_or_email" required />
@@ -35,14 +68,34 @@ function loadLoginForm() {
             <input type="password" id="password" name="password" required />
         </div>
         <button type="submit">Login</button>
-    </form>
+        <p id="login-error" style="color: red;"></p>
+      </form>
     `;
+
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const response = await fetch("/login", {
+            method: "POST",
+            body: formData
+        });
+
+        if (response.ok) {
+            alert("Login successful!");
+            loadHomePage();
+        } else {
+            document.getElementById("login-error").textContent = "Invalid username/email or password";
+        }
+    });
 }
 
-function loadRegisterForm() {
-    const app = document.getElementById('app');
+function loadRegisterForm(pushState = true) {
+    if (pushState) history.pushState({}, "", "/register");
+
+    const app = document.getElementById("app");
     app.innerHTML = `
-      <form id="register-form" method="POST" action="/register">
+      <form id="register-form">
         <div>
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required />
@@ -56,11 +109,11 @@ function loadRegisterForm() {
             <input type="password" id="password" name="password" required />
         </div>
         <div>
-            <label for="First Name">First Name:</label>
+            <label for="firstName">First Name:</label>
             <input type="text" id="firstName" name="firstName" required />
         </div>
         <div>
-            <label for="Last Name">Last Name:</label>
+            <label for="lastName">Last Name:</label>
             <input type="text" id="lastName" name="lastName" required />
         </div>
         <div>
@@ -72,6 +125,24 @@ function loadRegisterForm() {
             <input type="text" id="gender" name="gender" required />
         </div>
         <button type="submit">Register</button>
-    </form>
+        <p id="register-error" style="color: red;"></p>
+      </form>
     `;
+
+    document.getElementById("register-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const response = await fetch("/register", {
+            method: "POST",
+            body: formData
+        });
+
+        if (response.ok) {
+            alert("Registration successful! Redirecting to login...");
+            loadLoginForm();
+        } else {
+            document.getElementById("register-error").textContent = "Registration failed. Check inputs.";
+        }
+    });
 }
