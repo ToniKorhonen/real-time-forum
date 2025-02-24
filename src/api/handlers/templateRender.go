@@ -11,7 +11,7 @@ var tmpl *template.Template
 
 func InitTemplates() {
 	var err error
-	tmpl, err = template.ParseGlob("../Frontend/templates/index.html")
+	tmpl, err = template.ParseGlob("../Frontend/index.html")
 	if err != nil {
 		log.Fatalf("Error parsing templates: %v", err)
 	}

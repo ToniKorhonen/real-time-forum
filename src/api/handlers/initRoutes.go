@@ -1,13 +1,17 @@
 package handlers
 
-import "net/http"
+import (
+	"net/http"
+)
 
 func InitRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
 
-	fs := http.FileServer(http.Dir("real-time-forum/src/Frontend/static"))
+	// Correct the static file path and URL prefix
+	fs := http.FileServer(http.Dir("../Frontend/static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
+	// Define handlers
 	mux.HandleFunc("/ws", handleWebSocket)
 	mux.HandleFunc("/login", handleLogin)
 	mux.HandleFunc("/register", handleRegister)

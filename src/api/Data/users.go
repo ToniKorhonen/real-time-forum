@@ -18,7 +18,7 @@ func InsertUser(user *User) error {
 		"age",
 		"gender",
 	)
-		VALUES (?,?,?,?,?,?);`, user.ID, user.Username, user.Password, strings.ToLower(user.Email), user.FirstName, user.LastName, user.Age, user.Gender)
+		VALUES (?,?,?,?,?,?,?,?);`, user.ID, user.Username, user.Password, strings.ToLower(user.Email), user.FirstName, user.LastName, user.Age, user.Gender)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "UNIQUE constraint failed: users.email") {

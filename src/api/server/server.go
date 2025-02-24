@@ -22,6 +22,7 @@ type Config struct {
 
 func StartHTTPServer() {
 	// Initialize the templates
+
 	handlers.InitTemplates()
 	serverConfig := Config{
 		Addr:         ":8080",
