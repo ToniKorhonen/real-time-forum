@@ -39,7 +39,6 @@ func InitDb() *sql.DB {
 		"expires_at" TIMESTAMP,
 		FOREIGN KEY("user_uuid") REFERENCES users("uuid") ON DELETE CASCADE
 	);`
-
 	_, err = database.Exec(createSessionTable)
 	if err != nil {
 		log.Fatal(err)

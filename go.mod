@@ -8,4 +8,4 @@ require github.com/gorilla/websocket v1.5.3
 
 require github.com/gofrs/uuid v4.4.0+incompatible
 
-require golang.org/x/crypto v0.33.0
+require golang.org/x/crypto v0.35.0
