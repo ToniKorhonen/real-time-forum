@@ -1,6 +1,9 @@
 package data
 
-import "database/sql"
+import (
+	"database/sql"
+	"time"
+)
 
 type Page struct {
 	Title string
@@ -18,6 +21,12 @@ type User struct {
 	LastName  string
 	Age       int
 	Gender    string
+}
+
+type Session struct {
+	SessionID  []byte
+	UserUUID   []byte
+	Expires_at time.Time
 }
 
 var DB *sql.DB

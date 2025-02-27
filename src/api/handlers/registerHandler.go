@@ -1,17 +1,18 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	data "real-time-forum/src/api/Data"
 	"real-time-forum/src/api/middleware"
 	"strconv"
-	"strings"
 )
 
 func handleRegister(w http.ResponseWriter, r *http.Request) {
 	var errorMessages []string
 	var user data.User
+	w.Header().Set("Content-Type", "application/json") // Ensure JSON response
 
 	if r.Method == http.MethodPost {
 		err := r.ParseForm()
@@ -76,7 +77,11 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					http.Error(w, "Database error: "+err.Error(), http.StatusInternalServerError)
 					return
+				} else {
+					middleware.Cookie(w, &user)
 				}
+
+				json.NewEncoder(w).Encode(user)
 
 				// Send a success response
 				w.WriteHeader(http.StatusOK)
@@ -84,10 +89,4 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	p := &data.Page{
-		Title: "Register",
-		Error: strings.Join(errorMessages, "<br>"), // Séparer les erreurs par des sauts de ligne HTMLù
-		Data:  make(map[string]interface{}),
-	}
-	RenderTemplate(w, "index.html", p)
 }
