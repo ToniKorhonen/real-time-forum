@@ -134,20 +134,23 @@ function loadRegisterForm(pushState = true) {
       </form>
     `;
 
-    // document.getElementById("register-form").addEventListener("submit", async (e) => {
-    //     e.preventDefault();
-
-    //     const formData = new FormData(e.target);
-    //     const response = await fetch("/register", {
-    //         method: "POST",
-    //         body: formData
-    //     });
-
-    //     if (response.ok) {
-    //         alert("Registration successful! Redirecting to login...");
-    //         loadLoginForm();
-    //     } else {
-    //         document.getElementById("register-error").textContent = "Registration failed. Check inputs.";
-    //     }
-    // });
+    document.getElementById("register-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+    
+        const formData = new URLSearchParams(new FormData(e.target)); // Convert to URL-encoded format
+    
+        const response = await fetch("/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData
+        });
+    
+        if (response.ok) {
+            alert("Registration successful! Redirecting to login...");
+            loadLoginForm();
+        } else {
+            document.getElementById("register-error").textContent = "Registration failed. Check inputs.";
+        }
+    });
+    
 }
