@@ -49,10 +49,10 @@ func IsValidUsername(username string) []string {
 // Function to validate age
 func IsValidAge(age int) []string {
 	var errors []string
-	if age >= 100 {
+	if age > 100 {
 		errors = append(errors, "L'age doit être inférieur à 100")
 	}
-	if age <= 13 {
+	if age < 13 {
 		errors = append(errors, "L'age doit être supérieur à 13")
 	}
 	return errors

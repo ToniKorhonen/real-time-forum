@@ -11,14 +11,14 @@ func InsertUser(user *User) error {
 	INSERT INTO users (
 		"uuid",
 		"username",
-		"password",
 		"email",
+		"password",
 		"firstName",
 		"lastName",
 		"age",
-		"gender",
+		"gender"
 	)
-		VALUES (?,?,?,?,?,?,?,?);`, user.ID, user.Username, user.Password, strings.ToLower(user.Email), user.FirstName, user.LastName, user.Age, user.Gender)
+		VALUES (?,?,?,?,?,?,?,?);`, user.ID, user.Username, strings.ToLower(user.Email), user.Password, user.FirstName, user.LastName, user.Age, user.Gender)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "UNIQUE constraint failed: users.email") {

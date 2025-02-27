@@ -4,14 +4,16 @@ import "database/sql"
 
 type Page struct {
 	Title string
+	Error string
 	User  User
+	Data  interface{}
 }
 
 type User struct {
 	ID        []byte
 	Username  string
-	Password  []byte
 	Email     string
+	Password  []byte
 	FirstName string
 	LastName  string
 	Age       int

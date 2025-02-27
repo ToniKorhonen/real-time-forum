@@ -8,15 +8,15 @@ document.addEventListener("DOMContentLoaded", function () {
         loadHomePage();
     });
 
-    document.getElementById("login-link").addEventListener("click", (e) => {
-        e.preventDefault();
-        loadLoginForm();
-    });
+    // document.getElementById("login-link").addEventListener("click", (e) => {
+    //     e.preventDefault();
+    //     loadLoginForm();
+    // });
 
-    document.getElementById("register-link").addEventListener("click", (e) => {
-        e.preventDefault();
-        loadRegisterForm();
-    });
+    // document.getElementById("register-link").addEventListener("click", (e) => {
+    //     e.preventDefault();
+    //     loadRegisterForm();
+    // });
 
     // Handle browser back/forward navigation
     window.addEventListener("popstate", () => {
@@ -95,7 +95,7 @@ function loadRegisterForm(pushState = true) {
 
     const app = document.getElementById("app");
     app.innerHTML = `
-      <form id="register-form">
+      <form action="/register" method="post" id="register-form">
         <div>
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required />
@@ -122,27 +122,32 @@ function loadRegisterForm(pushState = true) {
         </div>
         <div>
             <label for="gender">Gender:</label>
-            <input type="text" id="gender" name="gender" required />
+            <select id="gender" name="gender" required>
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
         </div>
         <button type="submit">Register</button>
         <p id="register-error" style="color: red;"></p>
       </form>
     `;
 
-    document.getElementById("register-form").addEventListener("submit", async (e) => {
-        e.preventDefault();
+    // document.getElementById("register-form").addEventListener("submit", async (e) => {
+    //     e.preventDefault();
 
-        const formData = new FormData(e.target);
-        const response = await fetch("/register", {
-            method: "POST",
-            body: formData
-        });
+    //     const formData = new FormData(e.target);
+    //     const response = await fetch("/register", {
+    //         method: "POST",
+    //         body: formData
+    //     });
 
-        if (response.ok) {
-            alert("Registration successful! Redirecting to login...");
-            loadLoginForm();
-        } else {
-            document.getElementById("register-error").textContent = "Registration failed. Check inputs.";
-        }
-    });
+    //     if (response.ok) {
+    //         alert("Registration successful! Redirecting to login...");
+    //         loadLoginForm();
+    //     } else {
+    //         document.getElementById("register-error").textContent = "Registration failed. Check inputs.";
+    //     }
+    // });
 }
