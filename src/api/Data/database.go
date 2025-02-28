@@ -44,5 +44,19 @@ func InitDb() *sql.DB {
 		log.Fatal(err)
 	}
 
+	createMessagesTable := `
+	CREATE TABLE IF NOT EXISTS messages (
+		"MessID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+		"senderID" BLOB NOT NULL,
+		"receiverID" BLOB NOT NULL,
+		"content" TEXT NOT NULL,
+		"date" TIMESTAMP NOT NULL,
+		FOREIGN KEY("senderID") REFERENCES users("uuid") ON DELETE CASCADE,
+		FOREIGN KEY("receiverID") REFERENCES users("uuid") ON DELETE CASCADE
+	);`
+	_, err = database.Exec(createMessagesTable)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return database
 }
