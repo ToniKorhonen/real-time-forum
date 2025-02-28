@@ -63,4 +63,4 @@ function loadRegisterForm(pushState = true) {
     
 }
 
-export default loadRegisterForm;
+export { loadRegisterForm };
