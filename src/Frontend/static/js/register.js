@@ -1,3 +1,5 @@
+import { loadLoginForm } from "./login.js";
+
 function loadRegisterForm(pushState = true) {
     if (pushState) history.pushState({}, "", "/register");
 

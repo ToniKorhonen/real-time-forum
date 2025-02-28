@@ -2,7 +2,22 @@ import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
 import { loadHomePage } from "./home.js";
 
-function loadNavigation() {
+async function loadNavigation() {
+    document.getElementById("logout-link").addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        try {
+            let response = await fetch("/logout", { method: "POST" });
+            if (!response.ok) throw new Error("Logout failed");
+            loadHomePage();
+            history.pushState({}, "", "/");
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    );
+
     document.getElementById("login-link").addEventListener("click", (e) => {
         e.preventDefault();
         loadLoginForm();
