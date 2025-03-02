@@ -8,7 +8,7 @@ import (
 type Page struct {
 	Title string
 	Error string
-	User  User
+	User  *User
 	Data  interface{}
 }
 

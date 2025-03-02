@@ -1,3 +1,5 @@
+import { loadLoginForm } from "./login.js";
+
 function loadRegisterForm(pushState = true) {
     if (pushState) history.pushState({}, "", "/register");
 
@@ -63,4 +65,4 @@ function loadRegisterForm(pushState = true) {
     
 }
 
-export default loadRegisterForm;
+export { loadRegisterForm };

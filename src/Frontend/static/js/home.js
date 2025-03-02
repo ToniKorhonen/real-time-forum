@@ -1,4 +1,7 @@
-function loadHomePage(pushState = true) {
+import { loadLoginForm } from "./login.js";
+import { loadRegisterForm } from "./register.js";
+
+function loadHomePage(userData, pushState = true) {
     if (pushState) history.pushState({}, "", "/");
 
     const app = document.getElementById("app");
@@ -8,6 +11,17 @@ function loadHomePage(pushState = true) {
       <p>Click <a href="#" id="home-login-link">here</a> to login</p>
       <p>Click <a href="#" id="home-register-link">here</a> to register</p>
     `;
+
+
+    let user = document.createElement("div");
+    user.id = "user";
+    user.innerHTML = `
+      <h2>User Information</h2>
+      <p>user data: ${userData}/p>
+    `;
+
+    console.log(userData);
+    app.appendChild(user);
 
     // Attach event listeners to dynamically created links
     document.getElementById("home-login-link").addEventListener("click", (e) => {

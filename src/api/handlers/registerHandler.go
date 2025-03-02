@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	data "real-time-forum/src/api/Data"
@@ -12,7 +11,6 @@ import (
 func handleRegister(w http.ResponseWriter, r *http.Request) {
 	var errorMessages []string
 	var user data.User
-	w.Header().Set("Content-Type", "application/json") // Ensure JSON response
 
 	if r.Method == http.MethodPost {
 		err := r.ParseForm()
@@ -80,12 +78,12 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 				} else {
 					middleware.Cookie(w, &user)
 				}
-
-				json.NewEncoder(w).Encode(user)
-
 				// Send a success response
 				w.WriteHeader(http.StatusOK)
-				w.Write([]byte("Registration successful"))
+				// w.Write([]byte("Registration successful"))
+			} else {
+				// Send an error response
+				http.Error(w, "Registration failed", http.StatusBadRequest)
 			}
 		}
 	}

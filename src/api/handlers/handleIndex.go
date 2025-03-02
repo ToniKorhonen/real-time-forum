@@ -6,10 +6,8 @@ import (
 )
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
-	// Code to handle the index route
-
 	p := data.Page{
-		Title: "App", // Title of the page
+		Title: "App",
 	}
 	RenderTemplate(w, "index.html", p)
 }

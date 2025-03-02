@@ -14,7 +14,10 @@ func InitRoutes() *http.ServeMux {
 	// Define handlers
 	mux.HandleFunc("/ws", handleWebSocket)
 	mux.HandleFunc("/login", handleLogin)
+	mux.HandleFunc("/api/user", handleUserData)
 	mux.HandleFunc("/register", handleRegister)
+	mux.HandleFunc("/logout", handleLogout)
+
 	mux.HandleFunc("/", handleIndex)
 
 	return mux

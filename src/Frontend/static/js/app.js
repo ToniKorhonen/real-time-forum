@@ -1,25 +1,17 @@
-import { loadRegisterForm } from "./register.js";
-import { loadLoginForm } from "./login.js";
-import { loadHomePage } from "./home.js";
+import { renderLayout } from "./layout.js";
 
-document.addEventListener("DOMContentLoaded", function () {
-    // Initialize home page
-    loadHomePage();
 
-    // Attach event listeners for persistent navbar links
-    document.getElementById("home-link").addEventListener("click", (e) => {
-        e.preventDefault();
-        loadHomePage();
-    });
 
-    // Handle browser back/forward navigation
-    window.addEventListener("popstate", () => {
-        if (window.location.pathname === "/register") {
-            loadRegisterForm(false); // Do not push state again
-        } else if (window.location.pathname === "/login") {
-            loadLoginForm(false);
-        } else {
-            loadHomePage(false);
-        }
-    });
+document.addEventListener("DOMContentLoaded", async () => {
+    let userData = null;
+
+    try {
+        let response = await fetch("/api/user");
+        if (!response.ok) throw new Error("User not logged in");
+        userData = await response.json();
+    } catch (error) {
+        console.log(error.message);
+    }
+
+    renderLayout(userData);
 });
