@@ -38,8 +38,6 @@ func StartHTTPServer() {
 		WriteTimeout: serverConfig.WriteTimeout,
 	}
 
-	// Goroutine for graceful shutdown
-	log.Println("Server started on: http://localhost" + server.Addr)
 	go func() {
 		if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("HTTP server error: %v", err)
@@ -57,5 +55,4 @@ func StartHTTPServer() {
 	if err := server.Shutdown(shutdownContext); err != nil {
 		log.Fatal("HTTP shutdown error:", err)
 	}
-	log.Println("Graceful shutdown complete")
 }

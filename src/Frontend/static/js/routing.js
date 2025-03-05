@@ -1,19 +1,29 @@
 import { loadHomePage } from "./home.js";
 import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
+import { loadCreatePostForm } from "./posts.js"; // Import the function to load the post creation form
 
-function handleRouting() {
+function handleRouting(userData) {
     if (window.location.pathname === "/logout") {
-        // Handle logout
-        console.log("Logout");
-    }
-    if (window.location.pathname === "/register") {
+        console.log("User logged out");
+        document.body.innerHTML = `<p>Logging out...</p>`;
+        setTimeout(() => {
+            window.location.href = "/";
+        }, 1000);
+    } else if (window.location.pathname === "/register") {
         loadRegisterForm();
     } else if (window.location.pathname === "/login") {
         loadLoginForm();
+    } else if (window.location.pathname === "/createpost" && userData) {
+        loadCreatePostForm();
     } else {
-        loadHomePage();
+        loadHomePage(userData);
     }
 }
 
-export { handleRouting }; // Export the handleRouting function
+// Ensure routing updates dynamically when users navigate
+window.addEventListener("popstate", () => {
+    handleRouting();
+});
+
+export { handleRouting };

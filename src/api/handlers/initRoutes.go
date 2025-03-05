@@ -17,6 +17,7 @@ func InitRoutes() *http.ServeMux {
 	mux.HandleFunc("/api/user", handleUserData)
 	mux.HandleFunc("/register", handleRegister)
 	mux.HandleFunc("/logout", handleLogout)
+	mux.HandleFunc("/createpost", handlePost)
 
 	mux.HandleFunc("/", handleIndex)
 

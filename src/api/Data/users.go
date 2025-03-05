@@ -1,10 +1,9 @@
 package data
 
 import (
-	"encoding/base64"
+	"database/sql"
 	"errors"
 	"fmt"
-	"net/http"
 	"strings"
 )
 
@@ -34,63 +33,45 @@ func InsertUser(user *User) error {
 	return nil
 }
 
-// Search for a user in the database using his UUID
-func GetUserByUUID(uuid []byte) (*User, error) {
-	user := User{}
-	user_rows, err := DB.Query("SELECT * FROM users WHERE uuid = ?", uuid)
+func GetUserByUUID(userUUID string) (*User, error) {
+	user := &User{}
+	// Adjust columns and table name to match your DB schema.
+	err := DB.QueryRow(`
+        SELECT uuid, username, email, password, firstName, lastName, age, gender
+        FROM users
+        WHERE uuid = ?`,
+		userUUID,
+	).Scan(
+		&user.ID,
+		&user.Username,
+		&user.Email,
+		&user.Password,
+		&user.FirstName,
+		&user.LastName,
+		&user.Age,
+		&user.Gender,
+	)
+
 	if err != nil {
-		return &User{}, errors.New("Unvalid Identifier")
+		fmt.Println("Error fetching user:", err)
+		return nil, err
 	}
-	for user_rows.Next() {
-		err := user_rows.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.FirstName, &user.LastName, &user.Age, &user.Gender)
-		if err != nil {
-			fmt.Print(err)
-			return &User{}, errors.New("Unvalid Identifier")
+	return user, nil
+}
+
+// GetUserByEmailOrUsername retrieves a user by email or username
+func GetUserByEmailOrUsername(input string) (*User, error) {
+	var user User
+
+	query := `SELECT uuid, username, email, password FROM users WHERE email = ? OR username = ?`
+	err := DB.QueryRow(query, input, input).Scan(&user.ID, &user.Username, &user.Email, &user.Password)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, errors.New("user not found")
 		}
+		return nil, err
 	}
+
 	return &user, nil
-}
-
-// Get the connected user UUID
-func GetCurrentUserID(r *http.Request) ([]byte, error) {
-	cookie, err := r.Cookie("session_id")
-	if err != nil {
-		return nil, errors.New("User not logged in")
-	}
-	decodedSession, err := base64.StdEncoding.DecodeString(cookie.Value)
-	if err != nil {
-		return nil, errors.New("Invalid session ID")
-	}
-
-	var userUUID []byte
-
-	err = DB.QueryRow(`
-	SELECT user_UUID FROM sessions WHERE session_id = ?`,
-		decodedSession,
-	).Scan(&userUUID)
-
-	return userUUID, nil
-}
-
-func GetUserByEmailOrUsername(identifier string) (*User, error) {
-	user := User{}
-
-	// Query for user by either email or username
-	userRows, err := DB.Query(`SELECT * FROM users WHERE LOWER(email) = LOWER(?) OR LOWER(username) = LOWER(?);`, identifier, identifier)
-	if err != nil {
-		return nil, errors.New("Invalid identifier")
-	}
-	defer userRows.Close() // Ensure rows are closed properly
-
-	// Fetch the user data
-	if userRows.Next() {
-		err := userRows.Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.FirstName, &user.LastName, &user.Age, &user.Gender)
-		if err != nil {
-			fmt.Print(err)
-			return nil, errors.New("Invalid identifier")
-		}
-		return &user, nil
-	}
-
-	return nil, errors.New("User not found")
 }

@@ -18,14 +18,14 @@ func InitDb() *sql.DB {
 
 	createUserTable :=
 		`CREATE TABLE IF NOT EXISTS users (
-		"uuid" BLOB NOT NULL PRIMARY KEY UNIQUE,
-		"username" TEXT NOT NULL UNIQUE,
-		"email" TEXT NOT NULL UNIQUE,
-		"password" BLOB NOT NULL,
-		"firstName" TEXT NOT NULL,
-		"lastName" TEXT NOT NULL,
-		"age" INTEGER NOT NULL,
-		"gender" TEXT NOT NULL
+    "uuid" TEXT NOT NULL PRIMARY KEY UNIQUE,
+    "username" TEXT NOT NULL UNIQUE,
+    "email" TEXT NOT NULL UNIQUE,
+    "password" BLOB NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "age" INTEGER NOT NULL,
+    "gender" TEXT NOT NULL
 	);`
 	_, err = database.Exec(createUserTable)
 	if err != nil {
@@ -58,5 +58,25 @@ func InitDb() *sql.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Adding back the Posts Table (NO OTHER CHANGES)
+	createPostsTable := `
+	CREATE TABLE IF NOT EXISTS posts (
+		"id" INTEGER PRIMARY KEY AUTOINCREMENT,
+		"title" TEXT NOT NULL,
+		"content" TEXT NOT NULL,
+		"category" TEXT NOT NULL,
+		"user_id" BLOB DEFAULT NULL,
+		"created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		"likes_count" INTEGER DEFAULT 0,
+		"dislikes_count" INTEGER DEFAULT 0,
+		"comments_count" INTEGER DEFAULT 0,
+		FOREIGN KEY("user_id") REFERENCES users("uuid") ON DELETE CASCADE
+	);`
+	_, err = database.Exec(createPostsTable)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return database
 }

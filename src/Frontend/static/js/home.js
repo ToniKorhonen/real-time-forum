@@ -1,7 +1,8 @@
 import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
+import { loadCreatePostForm } from "./posts.js"; // Keep this for creating posts
 
-function loadHomePage(userData, pushState = true) {
+function loadHomePage(pushState = true) {
     if (pushState) history.pushState({}, "", "/");
 
     const app = document.getElementById("app");
@@ -10,20 +11,10 @@ function loadHomePage(userData, pushState = true) {
       <p>This is a simple homepage</p>
       <p>Click <a href="#" id="home-login-link">here</a> to login</p>
       <p>Click <a href="#" id="home-register-link">here</a> to register</p>
+      <p>Click <a href="#" id="home-create-post-link">here</a> to create a post</p>
     `;
 
-
-    let user = document.createElement("div");
-    user.id = "user";
-    user.innerHTML = `
-      <h2>User Information</h2>
-      <p>user data: ${userData}/p>
-    `;
-
-    console.log(userData);
-    app.appendChild(user);
-
-    // Attach event listeners to dynamically created links
+    // Attach event listeners
     document.getElementById("home-login-link").addEventListener("click", (e) => {
         e.preventDefault();
         loadLoginForm();
@@ -33,7 +24,11 @@ function loadHomePage(userData, pushState = true) {
         e.preventDefault();
         loadRegisterForm();
     });
-}
 
+    document.getElementById("home-create-post-link").addEventListener("click", (e) => {
+        e.preventDefault();
+        loadCreatePostForm();
+    });
+}
 
 export { loadHomePage };
