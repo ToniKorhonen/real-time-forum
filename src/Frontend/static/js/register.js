@@ -1,10 +1,10 @@
-import { loadLoginForm } from "./login.js";
+import { loadMainContent } from "./mainContent.js";
 
 function loadRegisterForm(pushState = true) {
     if (pushState) history.pushState({}, "", "/register");
 
-    const app = document.getElementById("app");
-    app.innerHTML = `
+    const content = document.getElementById("content");
+    content.innerHTML = `
       <form action="/register" method="post" id="register-form">
         <div>
             <label for="username">Username:</label>
@@ -40,7 +40,7 @@ function loadRegisterForm(pushState = true) {
             </select>
         </div>
         <button type="submit">Register</button>
-        <p id="register-error" style="color: red;"></p>
+        <p id="register-error" style="color: white;"></p>
       </form>
     `;
 
@@ -56,10 +56,15 @@ function loadRegisterForm(pushState = true) {
         });
     
         if (response.ok) {
-            alert("Registration successful! Redirecting to login...");
-            loadLoginForm();
+            console.log("Registration successful!");
+            loadMainContent();
         } else {
-            document.getElementById("register-error").textContent = "Registration failed. Check inputs.";
+            try {
+                const data = await response.json();
+                document.getElementById("register-error").textContent = data.message;
+            } catch (error) {
+                console.log("An error occurred:", error.message);
+            }
         }
     });
     

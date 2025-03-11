@@ -1,10 +1,10 @@
-import { loadHomePage } from "./home.js";
+import { loadMainContent } from "./mainContent.js";
 
 function loadLoginForm(pushState = true) {
     if (pushState) history.pushState({}, "", "/login");
 
-    const app = document.getElementById("app");
-    app.innerHTML = `
+    const content = document.getElementById("content");
+    content.innerHTML = `
       <form action="/login" method="POST" id="login-form">
         <div>
             <label for="username_or_email">Username or Email:</label>
@@ -30,8 +30,8 @@ function loadLoginForm(pushState = true) {
         });
 
         if (response.ok) {
-            alert("Login successful!");
-            loadHomePage();
+            console.log("Login successful!");
+            loadMainContent();
         } else {
             document.getElementById("login-error").textContent = "Invalid username/email or password";
         }

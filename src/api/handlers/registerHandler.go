@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	data "real-time-forum/src/api/Data"
@@ -9,6 +10,7 @@ import (
 )
 
 func handleRegister(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	var errorMessages []string
 	var user data.User
 
@@ -74,22 +76,22 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 				Gender:    gender,
 			}
 
-			// Insert the user into the database
-			err = data.InsertUser(&user)
-			if err != nil {
-				http.Error(w, "Database error: "+err.Error(), http.StatusInternalServerError)
-				return
+				// Insert the user into the database
+				err = data.InsertUser(&user)
+				if err != nil {
+					http.Error(w, "Database error: "+err.Error(), http.StatusInternalServerError)
+					return
+				} else {
+					middleware.Cookie(w, &user)
+				}
+				// Send a success response
+				w.WriteHeader(http.StatusOK)
+				// w.Write([]byte("Registration successful"))
+				json.NewEncoder(w).Encode(errorMessages)
+			} else {
+				// Send an error response
+				http.Error(w, "Registration failed", http.StatusBadRequest)
 			}
-
-			// Set a cookie session right after successful registration
-			middleware.Cookie(w, &user)
-
-			// Send a success response
-			w.WriteHeader(http.StatusOK)
-			fmt.Fprintln(w, "Registration successful")
-		} else {
-			// Send an error response
-			http.Error(w, "Registration failed", http.StatusBadRequest)
 		}
 	}
 }

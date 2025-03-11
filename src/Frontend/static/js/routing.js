@@ -1,4 +1,4 @@
-import { loadHomePage } from "./home.js";
+import { loadMainContent } from "./mainContent.js";
 import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
 import { loadCreatePostForm } from "./posts.js"; // Import the function to load the post creation form
@@ -14,16 +14,9 @@ function handleRouting(userData) {
         loadRegisterForm();
     } else if (window.location.pathname === "/login") {
         loadLoginForm();
-    } else if (window.location.pathname === "/createpost" && userData) {
-        loadCreatePostForm();
-    } else {
-        loadHomePage(userData);
+    } 
+    if (window.location.pathname === "/") {
     }
 }
 
-// Ensure routing updates dynamically when users navigate
-window.addEventListener("popstate", () => {
-    handleRouting();
-});
-
-export { handleRouting };
+export { handleRouting }; // Export the handleRouting function
