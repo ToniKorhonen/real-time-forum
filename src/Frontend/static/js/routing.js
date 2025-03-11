@@ -14,7 +14,9 @@ function handleRouting(userData) {
         loadRegisterForm();
     } else if (window.location.pathname === "/login") {
         loadLoginForm();
-    } 
+    } else if (window.location.pathname === "/createpost"){
+        loadCreatePostForm(false);
+    }
     if (window.location.pathname === "/") {
     }
 }

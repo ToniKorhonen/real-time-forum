@@ -1,5 +1,6 @@
 import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
+import { loadCreatePostForm } from "./posts.js";
 
 function loadMainContent(userData, pushState = true) {
   const content = document.getElementById("content");
@@ -16,7 +17,8 @@ function loadMainContent(userData, pushState = true) {
   paragraph.innerHTML = `
   This is a simple homepage<br>
   Click <a href="#" id="home-login-link">here</a> to login<br>
-  Click <a href="#" id="home-register-link">here</a> to register
+  Click <a href="#" id="home-register-link">here</a> to register<br>
+  Click <a href="#" id="home-create-post-link">here</a> to create a post
 `;
 
   content.appendChild(paragraph);
@@ -42,6 +44,11 @@ function loadMainContent(userData, pushState = true) {
   document.getElementById("home-register-link").addEventListener("click", (e) => {
     e.preventDefault();
     loadRegisterForm();
+  });
+
+  document.getElementById("home-create-post-link").addEventListener("click", (e) => {
+    e.preventDefault();
+    loadCreatePostForm();
   });
 }
 

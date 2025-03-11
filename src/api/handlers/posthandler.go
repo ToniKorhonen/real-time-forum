@@ -21,6 +21,12 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	cookies := r.Cookies()
+	fmt.Println("Received Cookies:")
+	for _, c := range cookies {
+		fmt.Printf("%s = %s\n", c.Name, c.Value)
+	}
+
 	cookie, err := r.Cookie("session_id")
 	if err != nil || cookie.Value == "" {
 		http.Error(w, "Error getting session cookie", http.StatusUnauthorized)

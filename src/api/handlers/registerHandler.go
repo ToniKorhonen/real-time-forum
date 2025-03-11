@@ -76,22 +76,21 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 				Gender:    gender,
 			}
 
-				// Insert the user into the database
-				err = data.InsertUser(&user)
-				if err != nil {
-					http.Error(w, "Database error: "+err.Error(), http.StatusInternalServerError)
-					return
-				} else {
-					middleware.Cookie(w, &user)
-				}
-				// Send a success response
-				w.WriteHeader(http.StatusOK)
-				// w.Write([]byte("Registration successful"))
-				json.NewEncoder(w).Encode(errorMessages)
-			} else {
-				// Send an error response
-				http.Error(w, "Registration failed", http.StatusBadRequest)
+			// Insert the user into the database
+			err = data.InsertUser(&user)
+			if err != nil {
+				http.Error(w, "Database error: "+err.Error(), http.StatusInternalServerError)
+				return
 			}
+			middleware.Cookie(w, &user)
+
+			// Send a success response
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(errorMessages)
+			return
 		}
+
+		// Send an error response
+		http.Error(w, "Registration failed", http.StatusBadRequest)
 	}
 }
