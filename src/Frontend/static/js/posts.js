@@ -50,9 +50,11 @@ function loadCreatePostForm(pushstate = true) {
       });
 
       if (response.ok) {
-          console.log("Post created successfully!");
-          alert("Post created successfully!");
-          loadMainContent();
+        console.log("Post created successfully!");
+        alert("Post created successfully!");
+        
+        history.pushState({}, "", "/"); // ⬅️ Ensure the URL updates to the main page
+        loadMainContent(); 
       } else {
           document.getElementById("post-error").textContent = "Failed to create post. Please try again.";
           console.error("Failed to create post:", await response.text()); 
@@ -60,4 +62,117 @@ function loadCreatePostForm(pushstate = true) {
   });
 }
 
+function loadPosts() {
+
+ 
+
+  fetch('/posts')  
+ 
+
+    .then(response => response.json())
+ 
+
+    .then(posts => {
+ 
+
+      const feedContainer = document.getElementById("feed");
+ 
+
+      feedContainer.innerHTML = ''; // Clear any previous content
+ 
+
+      
+ 
+
+      posts.forEach(post => {
+ 
+
+        const postEl = createPostElement(post);
+ 
+
+        feedContainer.appendChild(postEl);
+ 
+
+      });
+ 
+
+    })
+ 
+
+    .catch(err => console.error("Error loading posts:", err));
+ 
+
+}
+ 
+
+
+ 
+
+function createPostElement(post) {
+ 
+
+  const postElement = document.createElement("div");
+ 
+
+  postElement.classList.add("post");
+ 
+
+
+ 
+
+  // Create elements for title, content, and category
+ 
+
+  const title = document.createElement("h2");
+ 
+
+  title.textContent = post.title;
+ 
+
+
+ 
+
+  const content = document.createElement("p");
+ 
+
+  content.textContent = post.content;
+ 
+
+
+ 
+
+  const category = document.createElement("p");
+ 
+
+  category.textContent = `Category: ${post.category}`;
+ 
+
+
+ 
+
+  // Append all to the post element
+ 
+
+  postElement.appendChild(title);
+ 
+
+  postElement.appendChild(content);
+ 
+
+  postElement.appendChild(category);
+ 
+
+
+ 
+
+  return postElement;
+ 
+
+}
+ 
+
+
+ 
+
+export { loadPosts}
 export { loadCreatePostForm };

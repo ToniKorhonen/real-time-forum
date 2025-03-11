@@ -34,5 +34,17 @@ type Session struct {
 	Expires_at time.Time
 }
 
+type Post struct {
+	ID            int       `json:"id"`
+	Title         string    `json:"title"`
+	Content       string    `json:"content"`
+	Category      string    `json:"category"`
+	UserID        string    `json:"user_id"`
+	CreatedAt     time.Time `json:"created_at"`
+	LikesCount    int       `json:"likes_count"`
+	DislikesCount int       `json:"dislikes_count"`
+	CommentsCount int       `json:"comments_count"`
+}
+
 // DB is your global database handle.
 var DB *sql.DB

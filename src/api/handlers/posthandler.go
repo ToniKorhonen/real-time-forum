@@ -3,16 +3,11 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	data "real-time-forum/src/api/Data"
 	"time"
 )
-
-type Post struct {
-	Title    string `json:"title"`
-	Content  string `json:"content"`
-	Category string `json:"category"`
-}
 
 // handlePost processes post creation.
 func handlePost(w http.ResponseWriter, r *http.Request) {
@@ -56,7 +51,7 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 
 	userIDStr := user.ID
 
-	var newPost Post
+	var newPost data.Post
 	err = json.NewDecoder(r.Body).Decode(&newPost)
 	if err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
@@ -78,4 +73,41 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintln(w, "Post created successfully")
+}
+
+func getPosts(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Ensure you are using the correct reference to your DB, e.g., data.DB if that's correct.
+	rows, err := data.DB.Query(`
+        SELECT id, title, content, category, user_id, created_at, likes_count, dislikes_count, comments_count 
+        FROM posts 
+        ORDER BY created_at DESC`)
+	if err != nil {
+		log.Println("Database query error:", err)
+		http.Error(w, "Database error", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var posts []data.Post
+	for rows.Next() {
+		var post data.Post
+		if err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Category, &post.UserID, &post.CreatedAt, &post.LikesCount, &post.DislikesCount, &post.CommentsCount); err != nil {
+			log.Println("Error scanning post:", err)
+			http.Error(w, "Error scanning post", http.StatusInternalServerError)
+			return
+		}
+		posts = append(posts, post)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(posts); err != nil {
+		log.Println("Error encoding posts:", err)
+		http.Error(w, "Error encoding posts", http.StatusInternalServerError)
+		return
+	}
 }
