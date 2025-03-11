@@ -1,26 +1,25 @@
-import { loadHomePage } from "./home.js";
+import { loadMainContent } from "./mainContent.js";
 import { loadNavigation } from "./navigation.js";
 import { handleRouting } from "./routing.js";
+import { loadHeader } from "./header.js";
 
-function renderLayout(userData ) {
+function renderLayout(userData) {
     document.body.innerHTML = `
-        <nav>
-            <a href="#" id="home-link">Home</a>
-            <a href="#" id="login-link">Login</a>
-            <a href="#" id="register-link">Register</a>
-            <a href="#" id="logout-link">Logout</a>
-        </nav>
-        <div id="app"></div>
-        <footer>
-            <p>Footer</p>
-        </footer>
+    <div id="app">
+        <header id="header"></header>
+        <main id="content"></main>
+        <footer id="footer"></footer>
+    </div>
     `;
-        
-    loadHomePage(userData);
 
-    loadNavigation();
-    
-    handleRouting();
+
+    loadHeader(userData);
+
+    loadMainContent(userData);
+
+    loadNavigation(userData);
+
+    handleRouting(userData);
 }
 
 export { renderLayout }; // Export the renderLayout function

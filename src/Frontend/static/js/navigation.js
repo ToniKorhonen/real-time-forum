@@ -1,15 +1,15 @@
 import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
-import { loadHomePage } from "./home.js";
+import { loadMainContent } from "./mainContent.js";
 
-async function loadNavigation() {
+async function loadNavigation(userData) {
     document.getElementById("logout-link").addEventListener("click", async (e) => {
         e.preventDefault();
 
         try {
             let response = await fetch("/logout", { method: "POST" });
             if (!response.ok) throw new Error("Logout failed");
-            loadHomePage();
+            loadMainContent();
             history.pushState({}, "", "/");
         } catch (error) {
             console.log(error.message);
@@ -32,7 +32,7 @@ async function loadNavigation() {
 
     document.getElementById("home-link").addEventListener("click", (e) => {
         e.preventDefault();
-        loadHomePage();
+        loadMainContent(userData);
         history.pushState({}, "", "/"); // Update URL
     });
 

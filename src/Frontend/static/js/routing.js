@@ -1,4 +1,4 @@
-import { loadHomePage } from "./home.js";
+import { loadMainContent } from "./mainContent.js";
 import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
 
@@ -11,8 +11,8 @@ function handleRouting() {
         loadRegisterForm();
     } else if (window.location.pathname === "/login") {
         loadLoginForm();
-    } else {
-        loadHomePage();
+    } 
+    if (window.location.pathname === "/") {
     }
 }
 

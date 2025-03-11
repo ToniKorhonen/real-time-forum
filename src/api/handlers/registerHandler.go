@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	data "real-time-forum/src/api/Data"
@@ -9,6 +10,7 @@ import (
 )
 
 func handleRegister(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	var errorMessages []string
 	var user data.User
 
@@ -81,6 +83,7 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 				// Send a success response
 				w.WriteHeader(http.StatusOK)
 				// w.Write([]byte("Registration successful"))
+				json.NewEncoder(w).Encode(errorMessages)
 			} else {
 				// Send an error response
 				http.Error(w, "Registration failed", http.StatusBadRequest)
