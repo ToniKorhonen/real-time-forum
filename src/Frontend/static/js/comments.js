@@ -1,12 +1,12 @@
 import { loadMainContent } from "./mainContent.js";
 
-function loadCreatePostForm(pushstate = true) {
-    if (pushstate) history.pushState({}, "", "/createpost");
+function loadCommentForm(pushstate = true) {
+    if (pushstate) history.pushState({}, "", "/createcomment");
 
     const app = document.getElementById("app");
     app.innerHTML = `
-        <h1>Create a New Post</h1>
-        <form id="create-post-form">
+        <h1>Comment this post</h1>
+        <form id="comment-post-form">
             <div>
                 <label for="title">Title:</label>
                 <input type="text" id="title" name="title" required maxlength="100" placeholder="Enter your title" />
