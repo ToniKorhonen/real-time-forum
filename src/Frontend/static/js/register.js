@@ -1,6 +1,6 @@
 import { loadMainContent } from "./mainContent.js";
 
-function loadRegisterForm(pushState = true) {
+function loadRegisterForm(userData, pushState = true) {
     if (pushState) history.pushState({}, "", "/register");
 
     const content = document.getElementById("content");
@@ -57,7 +57,7 @@ function loadRegisterForm(pushState = true) {
     
         if (response.ok) {
             console.log("Registration successful!");
-            loadMainContent();
+            loadMainContent(userData);
         } else {
             try {
                 const data = await response.json();

@@ -15,11 +15,13 @@ func InitRoutes() *http.ServeMux {
 	mux.HandleFunc("/ws", handleWebSocket)
 	mux.HandleFunc("/login", handleLogin)
 	mux.HandleFunc("/api/user", handleUserData)
+	mux.HandleFunc("/api/online-users", handleOnlineUsers)
+
 	mux.HandleFunc("/register", handleRegister)
 	mux.HandleFunc("/logout", handleLogout)
 	mux.HandleFunc("/createpost", handlePost)
 	mux.HandleFunc("/posts", getPosts)
-
+	mux.HandleFunc("/chat", handleChat)
 	mux.HandleFunc("/", handleIndex)
 
 	return mux

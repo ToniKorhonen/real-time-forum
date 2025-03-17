@@ -24,6 +24,7 @@ type User struct {
 	LastName  string
 	Age       int
 	Gender    string
+	Online    bool
 }
 
 // Session stores session-related info.
@@ -32,6 +33,14 @@ type Session struct {
 	SessionID  string
 	UserUUID   string
 	Expires_at time.Time
+}
+
+type Message struct {
+	MessID     int
+	SenderID   []byte
+	ReceiverID []byte
+	Content    string
+	Date       time.Time
 }
 
 type Post struct {

@@ -74,6 +74,7 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 				LastName:  lastName,
 				Age:       age,
 				Gender:    gender,
+				Online:    false,
 			}
 
 			// Insert the user into the database
@@ -83,6 +84,13 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			middleware.Cookie(w, &user)
+
+			user.Online = true
+			err = data.UpdateOnlineUsers(&user)
+			if err != nil {
+				http.Error(w, "Database error: "+err.Error(), http.StatusInternalServerError)
+				return
+			}
 
 			// Send a success response
 			w.WriteHeader(http.StatusOK)

@@ -2,6 +2,8 @@ import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
 import { loadCreatePostForm } from "./posts.js";
 import { loadPosts } from "./posts.js"; // Keep this for loading posts
+import { sendMessage} from "./weboscket.js";
+import { usersOnline } from "./chat.js";
 
 function loadMainContent(userData, pushState = true) {
   const content = document.getElementById("content");
@@ -50,9 +52,11 @@ function loadMainContent(userData, pushState = true) {
 
   if (userData) {
     updateUserInfo(userData);
+    usersOnline(userData);
   } else {
     console.log(userData);
     console.log("wtf is this schrodinger's user");
+
   }
 
   // Attach event listeners to dynamically created links
@@ -73,7 +77,6 @@ function loadMainContent(userData, pushState = true) {
 
   loadPosts();
 }
-
 
 function updateUserInfo(userData) {
   const content = document.getElementById("content");

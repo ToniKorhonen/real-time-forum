@@ -20,13 +20,13 @@ async function loadNavigation(userData) {
 
     document.getElementById("login-link").addEventListener("click", (e) => {
         e.preventDefault();
-        loadLoginForm();
+        loadLoginForm(userData);
         history.pushState({}, "", "/login");
     });
 
     document.getElementById("register-link").addEventListener("click", (e) => {
         e.preventDefault();
-        loadRegisterForm();
+        loadRegisterForm(userData);
         history.pushState({}, "", "/register");
     });
 

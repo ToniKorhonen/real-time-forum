@@ -1,6 +1,6 @@
 import { loadMainContent } from "./mainContent.js";
 
-function loadLoginForm(pushState = true) {
+function loadLoginForm(userData, pushState = true) {
     if (pushState) history.pushState({}, "", "/login");
 
     const content = document.getElementById("content");
@@ -31,7 +31,7 @@ function loadLoginForm(pushState = true) {
 
         if (response.ok) {
             console.log("Login successful!");
-            loadMainContent();
+            loadMainContent(userData);
         } else {
             document.getElementById("login-error").textContent = "Invalid username/email or password";
         }

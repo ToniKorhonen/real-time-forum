@@ -25,7 +25,8 @@ func InitDb() *sql.DB {
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "age" INTEGER NOT NULL,
-    "gender" TEXT NOT NULL
+    "gender" TEXT NOT NULL,
+	"online" BOOLEAN DEFAULT FALSE
 	);`
 	_, err = database.Exec(createUserTable)
 	if err != nil {

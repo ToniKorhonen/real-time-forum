@@ -28,7 +28,7 @@ func handleUserData(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user, err := data.GetUserByUUID(string(userID))
-	if err != nil {							
+	if err != nil {
 		http.Error(w, "User not found", http.StatusNotFound)
 		return
 	}
