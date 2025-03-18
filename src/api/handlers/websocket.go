@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"sync"
 
-	// Import the data package
 	data "real-time-forum/src/api/Data"
 
 	"github.com/gorilla/websocket"

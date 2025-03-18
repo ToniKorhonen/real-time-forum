@@ -47,14 +47,7 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 
 	// Set session cookie
 	middleware.Cookie(w, user)
-
-	user.Online = true
-	err = data.UpdateOnlineUsers(user)
-	if err != nil {
-		fmt.Println("Error updating online status for user:", emailOrUsername)
-		http.Error(w, "Error updating online status", http.StatusInternalServerError)
-		return
-	}
+	data.SetUserOnline(user.Username)
 
 	fmt.Println("Login successful for user:", emailOrUsername)
 	w.WriteHeader(http.StatusOK)

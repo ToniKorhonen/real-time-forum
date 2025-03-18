@@ -18,10 +18,9 @@ func InsertUser(user *User) error {
 		"firstName",
 		"lastName",
 		"age",
-		"gender",
-		"online"
-	)
-		VALUES (?,?,?,?,?,?,?,?,?);`, user.ID, user.Username, strings.ToLower(user.Email), user.Password, user.FirstName, user.LastName, user.Age, user.Gender, user.Online)
+		"gender"
+		)
+		VALUES (?,?,?,?,?,?,?,?);`, user.ID, user.Username, strings.ToLower(user.Email), user.Password, user.FirstName, user.LastName, user.Age, user.Gender)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "UNIQUE constraint failed: users.email") {
@@ -46,7 +45,7 @@ func GetUserByUUID(userUUID string) (*User, error) {
 	user := &User{}
 	// Adjust columns and table name to match your DB schema.
 	err := DB.QueryRow(`
-        SELECT uuid, username, email, password, firstName, lastName, age, gender, online
+        SELECT uuid, username, email, password, firstName, lastName, age, gender
         FROM users
         WHERE uuid = ?`,
 		userUUID,
@@ -59,7 +58,6 @@ func GetUserByUUID(userUUID string) (*User, error) {
 		&user.LastName,
 		&user.Age,
 		&user.Gender,
-		&user.Online,
 	)
 
 	if err != nil {

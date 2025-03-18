@@ -2,7 +2,6 @@ import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
 import { loadCreatePostForm } from "./posts.js";
 import { loadPosts } from "./posts.js"; // Keep this for loading posts
-import { sendMessage} from "./weboscket.js";
 import { usersOnline } from "./chat.js";
 
 function loadMainContent(userData, pushState = true) {

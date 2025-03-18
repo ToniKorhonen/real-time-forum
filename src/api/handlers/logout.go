@@ -22,13 +22,7 @@ func handleLogout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user.Online = false
-	err = data.UpdateOnlineUsers(user)
-	if err != nil {
-		fmt.Println("Error updating online status for user:", user.Username)
-		http.Error(w, "Error updating online status", http.StatusInternalServerError)
-		return
-	}
+	data.SetUserOffline(user.Username)
 
 	// Clear the session cookie
 	cookie := &http.Cookie{
@@ -42,5 +36,4 @@ func handleLogout(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, cookie)
 
 	// Redirect the user to the login page after logging out
-	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

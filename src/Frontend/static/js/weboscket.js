@@ -1,7 +1,7 @@
 let socket
 
 function initWebSocket(userID) {
-    socket = new WebSocket(`ws://${window.location.host}/ws/${userID}`); // Create a new WebSocket connection
+    socket = new WebSocket(`ws://${window.location.host}/ws`); // Create a new WebSocket connection
 
     socket.onmessage = (event) => {
         const msg = JSON.parse(event.data); // Parse the JSON data

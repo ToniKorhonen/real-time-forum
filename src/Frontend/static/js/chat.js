@@ -10,12 +10,12 @@ async function usersOnline() {
         const response = await fetch("/api/online-users");
         if (!response.ok) throw new Error("Failed to fetch online users");
 
-        const onlineUsers = await response.json();
+        const onlineUsers = await response.json(); // onlineUsers is now just an array of strings
 
         // Populate the users list
-        onlineUsers.forEach(user => {
+        onlineUsers.forEach(username => {  // No more user.Username, just username
             const listItem = document.createElement("li");
-            listItem.textContent = user.Username; // Ensure the backend sends `username`
+            listItem.textContent = username; 
             usersList.appendChild(listItem);
         });
     } catch (error) {
@@ -27,3 +27,4 @@ async function usersOnline() {
 }
 
 export { usersOnline };
+
