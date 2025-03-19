@@ -1,4 +1,5 @@
 import { loadMainContent } from "./mainContent.js";
+import { loadCommentForm } from "./comments.js";
 
 function loadCreatePostForm(pushstate = true) {
     if (pushstate) history.pushState({}, "", "/createpost");
@@ -89,11 +90,20 @@ function createPostElement(post) {
     const category = document.createElement("p");
     category.textContent = `Category: ${post.category}`;
 
+    const commentButton = document.createElement("button");
+    commentButton.textContent = "Comment";
+    commentButton.classList.add("comment-button");
+    commentButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        loadCommentForm(post.id, true);
+      });
+
     postElement.appendChild(title);
     postElement.appendChild(content);
     postElement.appendChild(category);
+    postElement.appendChild(commentButton);
 
     return postElement;
 }
 
-export { loadPosts, loadCreatePostForm };
+export { loadPosts, loadCreatePostForm, createPostElement};

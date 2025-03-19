@@ -19,6 +19,8 @@ func InitRoutes() *http.ServeMux {
 	mux.HandleFunc("/logout", handleLogout)
 	mux.HandleFunc("/createpost", handlePost)
 	mux.HandleFunc("/posts", getPosts)
+	mux.HandleFunc("/createcomment", handleComment)
+	mux.HandleFunc("/comments", getComments)
 
 	mux.HandleFunc("/", handleIndex)
 

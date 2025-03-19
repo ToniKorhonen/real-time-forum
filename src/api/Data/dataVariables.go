@@ -46,5 +46,13 @@ type Post struct {
 	CommentsCount int       `json:"comments_count"`
 }
 
+type Comment struct {
+	ID        int       `json:"id"`
+	PostID    int       `json:"post_id"`
+	UserID    string    `json:"user_id"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
 // DB is your global database handle.
 var DB *sql.DB

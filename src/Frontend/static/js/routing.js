@@ -1,24 +1,26 @@
 import { loadMainContent } from "./mainContent.js";
 import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
-import { loadCreatePostForm } from "./posts.js"; // Import the function to load the post creation form
+import { loadCreatePostForm } from "./posts.js";
+import { loadCommentForm } from "./comments.js";
 
 function handleRouting(userData) {
-    if (window.location.pathname === "/logout") {
-        console.log("User logged out");
-        document.body.innerHTML = `<p>Logging out...</p>`;
-        setTimeout(() => {
-            window.location.href = "/";
-        }, 1000);
-    } else if (window.location.pathname === "/register") {
-        loadRegisterForm();
-    } else if (window.location.pathname === "/login") {
-        loadLoginForm();
-    } else if (window.location.pathname === "/createpost"){
-        loadCreatePostForm(false);
-    }
-    if (window.location.pathname === "/") {
-    }
+	const path = window.location.pathname;
+
+	if (path === "/logout") {
+		document.body.innerHTML = `<p>Logging out...</p>`;
+		setTimeout(() => { window.location.href = "/"; }, 1000);
+	} else if (path === "/register") {
+		loadRegisterForm();
+	} else if (path === "/login") {
+		loadLoginForm();
+	} else if (path === "/createpost") {
+		loadCreatePostForm(false);
+	} else if (path === "/createcomment") {
+		loadCommentForm(false);
+	} else {
+		loadMainContent();
+	}
 }
 
-export { handleRouting }; // Export the handleRouting function
+export { handleRouting };
