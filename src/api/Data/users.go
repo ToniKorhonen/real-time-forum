@@ -33,14 +33,6 @@ func InsertUser(user *User) error {
 	return nil
 }
 
-func UpdateOnlineUsers(user *User) error {
-	_, err := DB.Exec(`UPDATE users SET online = ? WHERE uuid = ?`, user.Online, user.ID)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func GetUserByUUID(userUUID string) (*User, error) {
 	user := &User{}
 	// Adjust columns and table name to match your DB schema.

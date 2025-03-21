@@ -25,8 +25,7 @@ func InitDb() *sql.DB {
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "age" INTEGER NOT NULL,
-    "gender" TEXT NOT NULL,
-	"online" BOOLEAN DEFAULT FALSE
+    "gender" TEXT NOT NULL
 	);`
 	_, err = database.Exec(createUserTable)
 	if err != nil {
@@ -47,7 +46,6 @@ func InitDb() *sql.DB {
 
 	createMessagesTable := `
 	CREATE TABLE IF NOT EXISTS messages (
-		"MessID" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 		"senderID" BLOB NOT NULL,
 		"receiverID" BLOB NOT NULL,
 		"content" TEXT NOT NULL,

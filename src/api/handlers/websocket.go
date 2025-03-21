@@ -3,9 +3,8 @@ package handlers
 import (
 	"fmt"
 	"net/http"
-	"sync"
-
 	data "real-time-forum/src/api/Data"
+	"sync"
 
 	"github.com/gorilla/websocket"
 )
@@ -16,69 +15,98 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-var clients = make(map[*websocket.Conn]*data.User) // Connected clients
-var broadcast = make(chan data.Message)            // Broadcast channel
-var users = make(map[string]*websocket.Conn)       // Connected users
-var mutex = &sync.Mutex{}                          // Mutex for synchronizing access
+var clients = make(map[*websocket.Conn]string)     // Maps connection → userID
+var usersOnline = make(map[string]*websocket.Conn) // Maps userID → connection
+var mutex = &sync.Mutex{}
 
-func handleWebSocket(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
+func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
+	userID, err := data.GetCurrentUserID(r)
 	if err != nil {
-		http.Error(w, "Could not open websocket connection", http.StatusBadRequest)
-		return
-	}
-	defer conn.Close()
-
-	userUUID, err := data.GetCurrentUserID(r)
-	if err != nil {
-		http.Error(w, "User not logged in", http.StatusUnauthorized)
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	user, err := data.GetUserByUUID(userUUID)
+	user, err := data.GetUserByUUID(userID)
 	if err != nil {
 		http.Error(w, "User not found", http.StatusNotFound)
 		return
 	}
 
-	// Register the client
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		fmt.Println("Error upgrading connection:", err)
+		return
+	}
+
 	mutex.Lock()
-	clients[conn] = user
-	users[string(user.ID)] = conn
+	clients[conn] = user.Username
+	usersOnline[user.Username] = conn
 	mutex.Unlock()
+
+	fmt.Println("User connected:", user.Username)
+
+	// Send past messages on connection
+	username := user.Username
+	sendPastMessages(conn, username)
+
+	defer func() {
+		mutex.Lock()
+		delete(clients, conn)
+		delete(usersOnline, user.Username)
+		conn.Close()
+		mutex.Unlock()
+		fmt.Println("User disconnected:", user.Username)
+	}()
 
 	for {
 		var msg data.Message
 		err := conn.ReadJSON(&msg)
 		if err != nil {
-			fmt.Println("Read error: ", err)
-			mutex.Lock()
-			delete(clients, conn)
-			mutex.Unlock()
+			fmt.Println("Error reading message:", err)
 			break
 		}
-		broadcast <- msg
-	}
-}
 
-func handleMessages() {
-	for {
-		msg := <-broadcast
+		fmt.Println("Received message:", msg)
+
+		// Save the message to the database
+		data.SaveMessage(msg.SenderID, msg.ReceiverID, msg.Content)
+
 		mutex.Lock()
-		for client, user := range clients {
-			if string(user.ID) == string(msg.ReceiverID) {
-				err := client.WriteJSON(msg)
-				if err != nil {
-					fmt.Println("Write error: ", err)
-					client.Close()
-					delete(clients, client)
-				}
+		receiverConn, receiverOnline := usersOnline[msg.ReceiverID]
+		senderConn := usersOnline[msg.SenderID] // Ensure sender also receives message
+		mutex.Unlock()
+
+		// Send the message to the receiver if online
+		if receiverOnline {
+			err = receiverConn.WriteJSON(msg)
+			if err != nil {
+				fmt.Println("Error sending message to receiver:", err)
+			}
+		} else {
+			fmt.Println("User", msg.ReceiverID, "is offline. Message saved in DB.")
+		}
+
+		// Ensure the sender also sees their own sent message in real time
+		if senderConn != nil {
+			err = senderConn.WriteJSON(msg)
+			if err != nil {
+				fmt.Println("Error sending message to sender:", err)
 			}
 		}
-		mutex.Unlock()
 	}
 }
 
-func init() {
-	go handleMessages()
+func sendPastMessages(conn *websocket.Conn, username string) {
+	messages, err := data.GetUserMessages(username)
+	if err != nil {
+		fmt.Println("Error fetching past messages:", err)
+		return
+	}
+
+	for _, msg := range messages {
+		err := conn.WriteJSON(msg)
+		if err != nil {
+			fmt.Println("Error sending past message:", err)
+		}
+	}
 }

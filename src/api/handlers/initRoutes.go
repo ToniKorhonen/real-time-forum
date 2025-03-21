@@ -12,7 +12,7 @@ func InitRoutes() *http.ServeMux {
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	// Define handlers
-	mux.HandleFunc("/ws", handleWebSocket)
+	mux.HandleFunc("/ws", HandleWebSocket)
 	mux.HandleFunc("/login", handleLogin)
 	mux.HandleFunc("/api/user", handleUserData)
 	mux.HandleFunc("/api/online-users", handleOnlineUsers)

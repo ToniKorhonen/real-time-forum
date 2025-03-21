@@ -24,7 +24,6 @@ type User struct {
 	LastName  string
 	Age       int
 	Gender    string
-	Online    bool
 }
 
 // Session stores session-related info.
@@ -36,11 +35,10 @@ type Session struct {
 }
 
 type Message struct {
-	MessID     int
-	SenderID   []byte
-	ReceiverID []byte
-	Content    string
-	Date       time.Time
+	SenderID   string    `json:"senderID"`
+	ReceiverID string    `json:"receiverID"`
+	Content    string    `json:"content"`
+	Timestamp  time.Time `json:"timestamp"`
 }
 
 type Post struct {

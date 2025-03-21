@@ -1,7 +1,7 @@
 import { loadMainContent } from "./mainContent.js";
 import { loadNavigation } from "./navigation.js";
 import { handleRouting } from "./routing.js";
-import { initWebSocket } from "./weboscket.js";
+import { initWebSocket } from "./websocket.js";
 import { loadHeader } from "./header.js";
 
 function renderLayout(userData) {
