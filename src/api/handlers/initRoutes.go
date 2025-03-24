@@ -16,6 +16,7 @@ func InitRoutes() *http.ServeMux {
 	mux.HandleFunc("/login", handleLogin)
 	mux.HandleFunc("/api/user", handleUserData)
 	mux.HandleFunc("/api/online-users", handleOnlineUsers)
+	mux.HandleFunc("/api/messages", handleGetMessages) // New endpoint for fetching messages
 
 	mux.HandleFunc("/register", handleRegister)
 	mux.HandleFunc("/logout", handleLogout)
