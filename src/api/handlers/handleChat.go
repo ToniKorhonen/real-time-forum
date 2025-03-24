@@ -7,10 +7,6 @@ import (
 	data "real-time-forum/src/api/Data"
 )
 
-func handleChat(w http.ResponseWriter, r *http.Request) {
-
-}
-
 func handleOnlineUsers(w http.ResponseWriter, r *http.Request) {
 	users := data.GetOnlineUsers()
 	fmt.Println("Online users:", users)
