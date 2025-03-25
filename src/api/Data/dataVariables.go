@@ -40,9 +40,8 @@ type Post struct {
 	Content       string    `json:"content"`
 	Category      string    `json:"category"`
 	UserID        string    `json:"user_id"`
+	Username      string    `json:"username"`
 	CreatedAt     time.Time `json:"created_at"`
-	LikesCount    int       `json:"likes_count"`
-	DislikesCount int       `json:"dislikes_count"`
 	CommentsCount int       `json:"comments_count"`
 }
 
@@ -50,6 +49,7 @@ type Comment struct {
 	ID        int       `json:"id"`
 	PostID    int       `json:"post_id"`
 	UserID    string    `json:"user_id"`
+	Username  string    `json:"username"`
 	Content   string    `json:"content"`
 	CreatedAt time.Time `json:"created_at"`
 }

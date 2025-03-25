@@ -1,7 +1,7 @@
 import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
 import { loadMainContent } from "./mainContent.js";
-
+import { handleRouting } from "./routing.js";
 async function loadNavigation(userData) {
     document.getElementById("logout-link").addEventListener("click", async (e) => {
         e.preventDefault();
