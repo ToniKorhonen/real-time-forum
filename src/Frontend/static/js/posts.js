@@ -56,7 +56,7 @@ function loadCreatePostForm(pushstate = true) {
       history.pushState({}, "", "/");
       loadMainContent();
     } else {
-      document.getElementById("post-error").textContent = "Failed to create post. Please try again.";
+      document.getElementById("post-error").textContent = "Failed to create post. Maybe you are not logged in ? Please try again.";
       console.error("Failed to create post:", await response.text());
     }
   });

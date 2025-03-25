@@ -31,16 +31,6 @@ function loadMainContent(userData, pushState = true) {
   // Now append the header to content
   content.appendChild(header);
 
-  // Create the paragraph with links
-  const paragraph = document.createElement("p");
-  paragraph.innerHTML = `
-    This is a simple homepage<br>
-    Click <a href="#" id="home-login-link">here</a> to login<br>
-    Click <a href="#" id="home-register-link">here</a> to register<br>
-    Click <a href="#" id="home-create-post-link">here</a> to create a post
-  `;
-  content.appendChild(paragraph);
-
   // Create and append the feed
   const feed = document.createElement("div");
   feed.id = "feed";
@@ -54,22 +44,6 @@ function loadMainContent(userData, pushState = true) {
     console.log(userData);
     console.log("wtf is this schrodinger's user");
   }
-
-  // Attach event listeners to dynamically created links
-  document.getElementById("home-login-link").addEventListener("click", (e) => {
-    e.preventDefault();
-    loadLoginForm();
-  });
-
-  document.getElementById("home-register-link").addEventListener("click", (e) => {
-    e.preventDefault();
-    loadRegisterForm();
-  });
-
-  document.getElementById("home-create-post-link").addEventListener("click", (e) => {
-    e.preventDefault();
-    loadCreatePostForm();
-  });
 
   loadPosts();
 }
