@@ -1,7 +1,8 @@
 import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
 import { loadMainContent } from "./mainContent.js";
-
+import { handleRouting } from "./routing.js";
+import { loadCreatePostForm } from "./posts.js";
 async function loadNavigation(userData) {
     document.getElementById("logout-link").addEventListener("click", async (e) => {
         e.preventDefault();
@@ -20,14 +21,20 @@ async function loadNavigation(userData) {
 
     document.getElementById("login-link").addEventListener("click", (e) => {
         e.preventDefault();
-        loadLoginForm(userData);
+        loadLoginForm();
         history.pushState({}, "", "/login");
     });
 
     document.getElementById("register-link").addEventListener("click", (e) => {
         e.preventDefault();
-        loadRegisterForm(userData);
+        loadRegisterForm();
         history.pushState({}, "", "/register");
+    });
+
+    document.getElementById("createpost-link").addEventListener("click", (e) => {
+        e.preventDefault();
+        loadCreatePostForm();
+        history.pushState({}, "", "/createpost");
     });
 
     document.getElementById("home-link").addEventListener("click", (e) => {

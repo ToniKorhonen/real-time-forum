@@ -1,8 +1,8 @@
 import { getSocket } from "./websocket.js";
 
 async function usersOnline(userData) {
-    const content = document.getElementById("content");
     const onlineUsersContainer = document.createElement("div");
+    onlineUsersContainer.id = "online-users-container";
     onlineUsersContainer.innerHTML = `<h3>Users Online</h3>`;
 
     const usersList = document.createElement("ul");
@@ -33,8 +33,11 @@ async function usersOnline(userData) {
     }
 
     onlineUsersContainer.appendChild(usersList);
-    content.appendChild(onlineUsersContainer);
+    // Prepend to the body so it's at the very top of the document
+    const navBar = document.getElementById("nav-bar");
+    navBar.insertAdjacentElement("afterend", onlineUsersContainer);
 }
+
 
 function openChat(sender, receiver) {
     if (sender === receiver) {

@@ -18,20 +18,12 @@ function loadMainContent(userData, pushState = true) {
   logo.alt = "Yellout Logo";
   logo.id = "header-logo";
 
-  const mainTitle = document.createElement("h1");
+  const mainTitle = document.createElement("h2");
   mainTitle.textContent = "Welcome to Yellout";
 
   header.appendChild(logo);
   header.appendChild(mainTitle);
   content.appendChild(header);
-
-  const paragraph = document.createElement("p");
-  paragraph.innerHTML = `
-    Click <a href="#" id="home-login-link">here</a> to login<br>
-    Click <a href="#" id="home-register-link">here</a> to register<br>
-    Click <a href="#" id="home-create-post-link">here</a> to create a post
-  `;
-  content.appendChild(paragraph);
 
   const feed = document.createElement("div");
   feed.id = "feed";
@@ -40,21 +32,6 @@ function loadMainContent(userData, pushState = true) {
   if (userData) {
     usersOnline(userData);
   }
-
-  document.getElementById("home-login-link").addEventListener("click", (e) => {
-    e.preventDefault();
-    loadLoginForm();
-  });
-
-  document.getElementById("home-register-link").addEventListener("click", (e) => {
-    e.preventDefault();
-    loadRegisterForm();
-  });
-
-  document.getElementById("home-create-post-link").addEventListener("click", (e) => {
-    e.preventDefault();
-    loadCreatePostForm();
-  });
 
   loadPosts();
 }

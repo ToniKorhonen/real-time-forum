@@ -5,70 +5,110 @@ body {
     padding: 0;
     background-color: rgb(238, 217, 166);
     color: #333;
-    
-    /* Center everything inside the body */
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centers horizontally */
+    align-items: center; /* Centers the #header and #app horizontally */
 }
 
 /* Main Application Container */
 #app {
-    font-size: large;
     width: 1000px;
-    margin: auto;
-    padding: 40px 20px 20px; /* Top padding ensures spacing for header */
+    padding: 10px; /* Reduced from 20px */
     border-radius: 8px;
     text-align: center;
+    background: none;
 }
 
+
 #header {
+  display: flex;
+  flex-direction: row;  /* or just remove this line if you already have a row by default */
+  align-items: center;  /* vertically centers the items */
+  justify-content: center; /* horizontally centers the items if desired */
+  gap: 5px;              /* Decrease gap if you want items closer */
+  margin: 0;             /* Remove default margin */
+  padding: 5px;          /* Reduce padding to bring everything closer */
+  width: 100%;
+}
+
+#online-users-container {
+    margin: 10px auto;  /* Reduced from 20px */
+    padding: 5px;       /* Reduced from 10px */
+    width: auto;
+    background-color: rgb(235, 214, 124);
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid black;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: flex;
-    align-items: center;  /* Aligns logo and title vertically */
-    gap: 15px;  /* Adds spacing between the logo and title */
-    padding: 10px 20px;
-  }
-  
-  #header-logo {
-    width: 280px;  /* Adjust size */
-    height: auto;
-  }
-/* Navigation */
-nav {
+    flex-direction: column;
+}
+
+
+/* Style the list to appear inline like a navbar */
+#online-users-container ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
     justify-content: center;
+    gap: 15px; /* Space between usernames */
+}
+
+/* Make usernames look clickable */
+#online-users-container li {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Optional: Add a hover effect */
+#online-users-container li:hover {
+    text-decoration: underline;
+}
+
+/* Navigation Bar */
+#nav-bar {
+    position: static; 
+    width: 1000px;
     background-color: rgb(238, 205, 56);
     padding: 10px;
     text-align: center;
     border-radius: 8px;
-    width: 1000px;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
 }
 
-nav a {
+#nav-bar a {
     color: rgb(0, 0, 0);
     text-decoration: none;
     margin: 0 15px;
     font-weight: bold;
 }
 
-nav a:hover {
+#nav-bar a:hover {
     text-decoration: underline;
+}
+
+/* Logo image */
+#header-logo {
+    width: 200px;
+    height: auto;
 }
 
 /* Feed Container */
 #feed {
-    width: 1000 px;
-    background: rgba(238, 205, 56, 0.7); /* Keeping feed color but slightly transparent */
+    width: 1000px; /* Fix the spacing before px */
+    background: rgba(238, 205, 56, 0.7);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-top: 20px; /* Ensures feed starts under welcome message */
-    box-shadow:
-     0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px; /* Ensures some spacing within #app */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Post Section */
 .post {
-    background: rgba(235, 172, 23, 0.5); /* More translucent */
+    background: rgba(235, 172, 23, 0.5);
     border: 1px solid rgb(84, 66, 1);
     padding: 15px;
     margin-bottom: 10px;
@@ -96,7 +136,7 @@ nav a:hover {
 
 /* Forms */
 form {
-    background: white;
+    background: rgb(250, 240, 169);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -136,6 +176,28 @@ form button:hover {
     background-color: darkred;
 }
 
+/* Comment Button */
+.comment-button {
+    background-color: rgb(83, 75, 4);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.comment-button:hover {
+    background-color: rgb(245, 130, 30);
+    transform: translateY(-2px);
+}
+
+.comment-button:active {
+    background-color: rgb(230, 110, 20);
+    transform: translateY(0);
+}
+
 /* Error Messages */
 #post-error, #login-error {
     color: red;
@@ -147,6 +209,7 @@ form button:hover {
 @media screen and (max-width: 600px) {
     #app {
         padding: 10px;
+        margin-top: 150px; /* Reduce top margin on smaller screens */
     }
 
     form input, form textarea, form select {
