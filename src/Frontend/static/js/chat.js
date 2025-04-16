@@ -145,7 +145,7 @@ async function openChat(sender, receiver) {
 
     chatMessages.addEventListener("scroll", throttle(async () => {
         const state = chatState[receiver];
-        const atTop = chatMessages.scrollTop <= 5;
+        const atTop = chatMessages.scrollTop <= 2;
     
         if (state.isLoading || !atTop || state.topOffset + pageSize >= state.total) return;
     
@@ -165,7 +165,7 @@ async function openChat(sender, receiver) {
         
     
         state.isLoading = false;
-    }, 300));    
+    }, 10));    
 }
 
 async function fetchMessagesPage(currentUser, otherUser, offset) {
