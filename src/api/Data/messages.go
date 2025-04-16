@@ -44,7 +44,7 @@ func GetUserMessages(username string) ([]Message, error) {
 
 // Get conversation between two specific users with pagination
 func GetConversation(user1, user2 string, limit, offset int) ([]Message, int, error) {
-	// First get total message count
+	// Get total message count
 	countQuery := `
         SELECT COUNT(*) FROM messages
         WHERE (senderID = ? AND receiverID = ?) OR (senderID = ? AND receiverID = ?)
@@ -55,7 +55,7 @@ func GetConversation(user1, user2 string, limit, offset int) ([]Message, int, er
 		return nil, 0, err
 	}
 
-	// Then get messages ordered DESC (latest first)
+	// Fetch latest messages first (descending)
 	query := `
         SELECT senderID, receiverID, content, date FROM messages
         WHERE (senderID = ? AND receiverID = ?) OR (senderID = ? AND receiverID = ?)
@@ -78,14 +78,5 @@ func GetConversation(user1, user2 string, limit, offset int) ([]Message, int, er
 		messages = append(messages, msg)
 	}
 
-	// Reverse to chronological order (oldest to newest)
-	for i, j := 0, len(messages)-1; i < j; i, j = i+1, j-1 {
-		messages[i], messages[j] = messages[j], messages[i]
-	}
-
-	// Debug print
-	fmt.Printf("Found %d messages between %s and %s (showing %d–%d of %d)\n",
-		len(messages), user1, user2, total-offset-len(messages)+1, total-offset, total)
-	fmt.Print(messages)
 	return messages, total, nil
 }

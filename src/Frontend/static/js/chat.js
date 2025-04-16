@@ -77,90 +77,95 @@ async function openChat(sender, receiver) {
         <button type="submit">Send</button>
       </form>
     `;
-    
-    chatWindow.style.position = "fixed";
-    chatWindow.style.bottom = "0";
-    chatWindow.style.right = "0";
-    chatWindow.style.width = "400px";
-    chatWindow.style.height = "450px";
-    chatWindow.style.border = "1px solid black";
-    chatWindow.style.backgroundColor = "white";
-    chatWindow.style.overflow = "hidden";
-    chatWindow.style.display = "flex";
-    chatWindow.style.flexDirection = "column";
-    chatWindow.style.padding = "10px";
-    chatWindow.style.zIndex = "1000";
-    chatWindow.style.boxShadow = "0 0 10px rgba(0,0,0,0.2)";
-    
-    const content = document.getElementById("content");
-    content.appendChild(chatWindow);
-    
-    // Close button
+
+    Object.assign(chatWindow.style, {
+        position: "fixed",
+        bottom: "0",
+        right: "0",
+        width: "400px",
+        height: "450px",
+        border: "1px solid black",
+        backgroundColor: "white",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        padding: "10px",
+        zIndex: "1000",
+        boxShadow: "0 0 10px rgba(0,0,0,0.2)"
+    });
+
+    document.getElementById("content").appendChild(chatWindow);
+
     document.getElementById(`close-chat-${receiver}`).addEventListener("click", () => {
         chatWindow.remove();
     });
-    
-    // Handle form submission
+
     const chatForm = document.getElementById(`chat-form-${receiver}`);
     const chatInput = document.getElementById(`chat-message-${receiver}`);
-    
+
     chatForm.addEventListener("submit", (event) => {
         event.preventDefault();
-    
+
         const message = chatInput.value.trim();
         if (!message) return;
-    
+
         const msgObj = {
             senderID: sender,
             receiverID: receiver,
             content: message,
             timestamp: new Date().toISOString()
         };
-    
+
         const socket = getSocket();
         if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify(msgObj));
         } else {
             console.error("WebSocket is not connected");
         }
-    
+
         chatInput.value = "";
     });
-    
-    chatInput.focus();    
+
+    chatInput.focus();
+
+
+    const initialOffset = 0;
+    const result = await fetchMessagesPage(sender, receiver, initialOffset);
 
     chatState[receiver] = {
-        topOffset: 10,        // we just loaded last 10 messages (offset 0 to 10)
-        bottomOffset: 0,      // start from latest
-        total: 0,
-        messages: [],
+        topOffset: initialOffset,
+        total: result.total,
+        messages: result.messages.reverse(), // make it oldest → newest
         isLoading: false,
-    }; 
-    
-    const state = chatState[receiver];
-
-    const result = await fetchMessagesPage(sender, receiver, 0); // get first page
-    state.offset = result.offset;
-    state.total = result.total;
-    state.messages = result.messages;
+    };
 
     renderMessages(receiver, sender);
 
     const chatMessages = document.getElementById(`chat-messages-${receiver}`);
 
-    chatMessages.addEventListener("scroll", async () => {
+    chatMessages.addEventListener("scroll", throttle(async () => {
         const state = chatState[receiver];
-        if (state.isLoading) return;
-
-        if (chatMessages.scrollTop === 0 && state.topOffset < state.total) {
-            state.isLoading = true;
-            const result = await fetchMessagesPage(sender, receiver, state.topOffset);
-            state.messages = [...result.messages, ...state.messages];
-            state.topOffset += pageSize;
-            renderMessages(receiver, sender);
-            state.isLoading = false;
-        }
-    });
+        const atTop = chatMessages.scrollTop <= 5;
+    
+        if (state.isLoading || !atTop || state.topOffset + pageSize >= state.total) return;
+    
+        console.log("🟢 Scrolled to top — fetching more messages...");
+    
+        state.isLoading = true;
+        const newOffset = state.topOffset + pageSize;
+        const result = await fetchMessagesPage(sender, receiver, newOffset);
+        const prevHeight = chatMessages.scrollHeight;
+    
+        state.messages = [...result.messages.reverse(), ...state.messages];
+        state.topOffset = newOffset;
+    
+        renderMessages(receiver, sender);
+        await new Promise(requestAnimationFrame);
+        chatMessages.scrollTop = chatMessages.scrollHeight - prevHeight;
+        
+    
+        state.isLoading = false;
+    }, 300));    
 }
 
 async function fetchMessagesPage(currentUser, otherUser, offset) {
@@ -173,8 +178,7 @@ async function fetchMessagesPage(currentUser, otherUser, offset) {
             msg =>
                 (msg.senderID === currentUser && msg.receiverID === otherUser) ||
                 (msg.senderID === otherUser && msg.receiverID === currentUser)
-        )
-        .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // always sort oldest → newest
+        ); // backend gives us DESC now, we reverse it on frontend
 
     return {
         messages,
@@ -219,5 +223,17 @@ function createChatMessageElement(msg, currentUsername) {
 
     return messageDiv;
 }
+
+function throttle(fn, limit) {
+    let inThrottle;
+    return function (...args) {
+        if (!inThrottle) {
+            fn.apply(this, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
 
 export { usersOnline, displayChatMessage };
