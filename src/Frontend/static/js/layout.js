@@ -8,6 +8,11 @@ function renderLayout(userData) {
     document.body.innerHTML = `
     <div id="app">
         <header id="header"></header>
+        <div id="top-right-icons">
+            <a href="#" id="logout-link" title="Logout">
+                <img src="/static/assets/sign-out-option.png" />
+            </a>
+        </div>
         <main id="content"></main>
         <footer id="footer"></footer>
     </div>

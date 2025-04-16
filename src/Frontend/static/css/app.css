@@ -1,161 +1,286 @@
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
+/* Base Reset */
+* {
     margin: 0;
     padding: 0;
-    background-color: rgb(238, 217, 166);
+    box-sizing: border-box;
+}
+
+/* General */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fae19c;
     color: #333;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centers the #header and #app horizontally */
+    align-items: center;
+    padding: 1rem;
+    min-height: 100vh;
 }
 
-/* Main Application Container */
 #app {
-    width: 1000px;
-    padding: 10px; /* Reduced from 20px */
-    border-radius: 8px;
-    text-align: center;
-    background: none;
+    width: 100%;
+    max-width: 1300px;
+    padding: 1.5rem;   
+    margin: 0 auto;
 }
 
 
-#header {
-  display: flex;
-  flex-direction: row;  /* or just remove this line if you already have a row by default */
-  align-items: center;  /* vertically centers the items */
-  justify-content: center; /* horizontally centers the items if desired */
-  gap: 5px;              /* Decrease gap if you want items closer */
-  margin: 0;             /* Remove default margin */
-  padding: 5px;          /* Reduce padding to bring everything closer */
-  width: 100%;
-}
-
-#online-users-container {
-    margin: 10px auto;  /* Reduced from 20px */
-    padding: 5px;       /* Reduced from 10px */
-    width: auto;
-    background-color: rgb(235, 214, 124);
-    text-align: center;
-    border-radius: 8px;
-    border: 1px solid black;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-}
-
-
-/* Style the list to appear inline like a navbar */
-#online-users-container ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    gap: 15px; /* Space between usernames */
-}
-
-/* Make usernames look clickable */
-#online-users-container li {
-    cursor: pointer;
-    font-weight: bold;
-}
-
-/* Optional: Add a hover effect */
-#online-users-container li:hover {
-    text-decoration: underline;
-}
-
-/* Navigation Bar */
-#nav-bar {
-    position: static; 
-    width: 1000px;
-    background-color: rgb(238, 205, 56);
-    padding: 10px;
-    text-align: center;
-    border-radius: 8px;
-    border: 1px solid black;
-    display: flex;
-    justify-content: center;
-}
-
-#nav-bar a {
-    color: rgb(0, 0, 0);
-    text-decoration: none;
-    margin: 0 15px;
-    font-weight: bold;
-}
-
-#nav-bar a:hover {
-    text-decoration: underline;
-}
-
-/* Logo image */
 #header-logo {
     width: 200px;
     height: auto;
 }
 
-/* Feed Container */
-#feed {
-    width: 1000px; /* Fix the spacing before px */
-    background: rgba(238, 205, 56, 0.7);
-    padding: 20px;
-    border-radius: 8px;
-    margin-top: 20px; /* Ensures some spacing within #app */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Header + Nav */
+#header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1rem;
 }
 
-/* Post Section */
-.post {
-    background: rgba(235, 172, 23, 0.5);
-    border: 1px solid rgb(84, 66, 1);
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+#header-logo-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+#header-logo-container img {
+    max-width: 180px;
+    height: auto;
+}
+
+#header-logo-container h1 {
+    font-size: 2rem;
+    color: #333;
     text-align: left;
 }
 
-.post h2 {
-    font-size: 1.5em;
+#nav-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background-color: #f1c40f;
+    border: 1px solid #aaa;
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+#nav-bar a img {
+    width: 30px;
+    height: auto;
+}
+
+#nav-bar a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.6rem 1.2rem;
+    background-color: #ffeb99af;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    color: #3b2e03;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+#nav-bar a span {
+    font-size: 1.2rem;
+}
+
+#nav-bar a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+
+#top-right-icons {
+    position: absolute;
+    top: 2.8rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+#top-right-icons img {
+    width: 60px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+#top-right-icons img:hover {
+    transform: scale(1.1);
+}
+
+#top-left-wrapper {
+    position: fixed;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 1000;
+}
+.users-title-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.users-icon {
+    width: 30px;
+    height: auto;
+}
+
+
+#online-users-container {
+    background-color: #fff9d0;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 1rem;
+    width: 240px;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#online-users-container h3 {
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    color: #3b2e03;
+}
+
+#users-online {
+    list-style: none;
+    padding: 0;
     margin: 0;
-    color: rgb(84, 66, 1);
+}
+
+.online-user {
+    background-color: #fef3b6;
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.online-user:hover {
+    background-color: #ffe07b;
+}
+
+.notification-badge {
+    background-color: #FF4136;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+#feed {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    margin-top: 2rem;
+    padding: 1.5rem; 
+    background: #fff8b3;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+
+/* Posts */
+.post {
+    background-color: #ffeb99;
+    border: 1px solid #caa300;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+
+.post:hover {
+    transform: translateY(-2px);
+}
+
+.post h2 {
+    font-size: 1.2rem;
+    color: #5c4400;
 }
 
 .post p {
-    font-size: 1.1em;
+    margin: 0.5rem 0;
+    font-size: 1rem;
     color: #444;
-    margin-top: 5px;
 }
 
 .post small {
-    color: gray;
-    font-size: 0.9em;
+    font-size: 0.85rem;
+    color: #777;
+}
+
+/* Comment Button */
+.comment-button {
+    background: #5a4a00;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.comment-button:hover {
+    background: #ffa726;
+    transform: scale(1.05);
+}
+
+.comment-button:active {
+    transform: scale(1);
+    background: #ef6c00;
 }
 
 /* Forms */
 form {
-    background: rgb(250, 240, 169);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff9d0;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    margin-top: 2rem;
 }
 
 form div {
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
 }
 
 form label {
-    font-weight: bold;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.3rem;
 }
 
 form input, form textarea, form select {
     width: 100%;
-    padding: 8px;
+    padding: 0.7rem;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
+    border-radius: 6px;
+    font-size: 1rem;
 }
 
 form textarea {
@@ -163,64 +288,139 @@ form textarea {
 }
 
 form button {
-    background-color: rgb(160, 143, 8);
-    color: white;
+    background-color: #f1c40f;
+    color: #000;
+    font-weight: bold;
+    padding: 0.8rem 1.2rem;
+    border-radius: 6px;
     border: none;
-    padding: 10px 15px;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 1.1em;
+    transition: background 0.2s ease;
 }
 
 form button:hover {
-    background-color: darkred;
-}
-
-/* Comment Button */
-.comment-button {
-    background-color: rgb(83, 75, 4);
+    background-color: #e67e22;
     color: #fff;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.comment-button:hover {
-    background-color: rgb(245, 130, 30);
-    transform: translateY(-2px);
-}
-
-.comment-button:active {
-    background-color: rgb(230, 110, 20);
-    transform: translateY(0);
-}
-
-/* Error Messages */
+/* Errors */
 #post-error, #login-error {
-    color: red;
-    font-size: 1em;
-    margin-top: 5px;
+    color: #e74c3c;
+    font-weight: bold;
+    margin-top: 0.5rem;
 }
 
-/* Responsive Design */
-@media screen and (max-width: 600px) {
-    #app {
-        padding: 10px;
-        margin-top: 150px; /* Reduce top margin on smaller screens */
+.chat-window {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 360px;
+    height: 420px;
+    background-color: #fff9d0;
+    border: 2px solid #caa300;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1000;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 1rem;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid #e0c76d;
+    font-weight: bold;
+    color: #3b2e03;
+    background-color: #fff7b8;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  
+  .chat-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    margin: 0 0.4rem;
+    cursor: pointer;
+    color: #3b2e03;
+    transition: transform 0.2s ease;
+  }
+  
+  .chat-close-btn:hover {
+    transform: scale(1.2);
+    color: #e74c3c;
+  }
+  
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.8rem;
+    margin-bottom: 0; /* <-- important */
+    background-color: #fffce0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }  
+  
+  .chat-form {
+    display: flex;
+    padding: 0.6rem;
+    background-color: #fff7c2;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    gap: 0.5rem;
+    /* Remove this if it exists: */
+    margin-top: 0;
+  }
+  
+  .chat-input {
+    flex-grow: 1;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px 0 0 8px;
+    font-size: 0.95rem;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .chat-send-btn {
+    background-color: #f1c40f;
+    color: #000;
+    font-weight: bold;
+    border: none;
+    padding: 0 1.2rem;
+    font-size: 0.95rem;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+  
+  .chat-send-btn:hover {
+    background-color: #e67e22;
+    color: #fff;
+  }
+  
+/* Responsive */
+@media screen and (max-width: 768px) {
+    #header-logo-container {
+        flex-direction: column;
+        text-align: center;
     }
 
-    form input, form textarea, form select {
-        font-size: 0.9em;
+    #nav-bar {
+        flex-wrap: wrap;
+        padding: 1rem;
     }
 
-    form button {
-        font-size: 1em;
+    #feed {
+        padding: 1rem;
     }
 
-    nav {
-        font-size: 0.9em;
+    .post {
+        padding: 1rem;
     }
 }
+

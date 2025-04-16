@@ -44,7 +44,6 @@ function loadCommentForm(postId, pushstate = true) {
     console.log(formData.content);
     if (response.ok) {
       console.log("Comment created successfully!");
-      alert("Comment created successfully!");
       loadMainContent();
     } else {
       const errorText = await response.text();

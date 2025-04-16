@@ -52,7 +52,6 @@ function loadCreatePostForm(pushstate = true) {
 
     if (response.ok) {
       console.log("Post created successfully!");
-      alert("Post created successfully!");
       loadMainContent();
     } else {
       document.getElementById("post-error").textContent = "Failed to create post. Maybe you are not logged in ? Please try again.";

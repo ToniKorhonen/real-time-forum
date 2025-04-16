@@ -2,7 +2,7 @@ import { getSocket } from "./websocket.js";
 
 const pageSize = 10;
 const chatState = {}; // { [receiverID]: { offset, total, messages, isLoading, unreadCount } }
-const notificationSound = new Audio('../notification.mp3'); // Add a notification sound file to your project
+const notificationSound = new Audio('../assets/notification.mp3'); // Add a notification sound file to your project
 
 // Create a notifications container
 function createNotificationsContainer() {
@@ -19,9 +19,40 @@ function createNotificationsContainer() {
 }
 
 async function usersOnline(userData) {
+    const oldWrapper = document.getElementById("top-left-wrapper");
+    if (oldWrapper) {
+        oldWrapper.remove(); // remove the whole thing
+    }
+    const header = document.getElementById("header");
+
+    let wrapper = document.getElementById("top-left-wrapper");
+    if (!wrapper) {
+        wrapper = document.createElement("div");
+        wrapper.id = "top-left-wrapper";
+        document.body.prepend(wrapper);
+    }
+
+    // Create the actual container first
     const onlineUsersContainer = document.createElement("div");
     onlineUsersContainer.id = "online-users-container";
-    onlineUsersContainer.innerHTML = `<h3>Users Online</h3>`;
+    
+    const titleWrapper = document.createElement("div");
+    titleWrapper.classList.add("users-title-wrapper");
+    
+    const img = document.createElement("img");
+    img.src = "/static/assets/users.png";
+    img.alt = "Users Icon";
+    img.classList.add("users-icon");
+    
+    const nameSpan = document.createElement("span");
+    nameSpan.textContent = "Users Online"; // or your custom text
+    nameSpan.classList.add("user-label");
+    
+    titleWrapper.appendChild(img);
+    titleWrapper.appendChild(nameSpan);
+
+    // Add to the main container
+    onlineUsersContainer.appendChild(titleWrapper);
 
     const usersList = document.createElement("ul");
     usersList.id = "users-online";
@@ -35,43 +66,23 @@ async function usersOnline(userData) {
 
         onlineUsers.forEach(username => {
             const listItem = document.createElement("li");
-            
-            // Create a container for the username and notification badge
-            const userContainer = document.createElement("div");
-            userContainer.style.display = "flex";
-            userContainer.style.justifyContent = "space-between";
-            userContainer.style.alignItems = "center";
-            userContainer.style.width = "100%";
-            
-            // Add username
+            listItem.classList.add("online-user");
+
             const usernameSpan = document.createElement("span");
             usernameSpan.textContent = username;
-            
-            // Add notification badge (initially hidden)
+
             const badge = document.createElement("span");
             badge.id = `notification-badge-${username}`;
             badge.classList.add("notification-badge");
             badge.style.display = "none";
-            badge.style.backgroundColor = "#FF4136";
-            badge.style.color = "white";
-            badge.style.borderRadius = "50%";
-            badge.style.padding = "2px 6px";
-            badge.style.fontSize = "12px";
-            badge.style.fontWeight = "bold";
-            
-            // Add elements to container
-            userContainer.appendChild(usernameSpan);
-            userContainer.appendChild(badge);
-            
-            listItem.appendChild(userContainer);
-            listItem.style.cursor = "pointer";
 
             listItem.onclick = () => {
                 openChat(userData.Username, username);
                 clearNotifications(username);
             };
 
-            listItem.classList.add("online-user");
+            listItem.appendChild(usernameSpan);
+            listItem.appendChild(badge);
             usersList.appendChild(listItem);
         });
     } catch (error) {
@@ -79,12 +90,11 @@ async function usersOnline(userData) {
     }
 
     onlineUsersContainer.appendChild(usersList);
-    const navBar = document.getElementById("nav-bar");
-    navBar.insertAdjacentElement("afterend", onlineUsersContainer);
-    
-    // Create notifications container
+    wrapper.appendChild(onlineUsersContainer);
+
     createNotificationsContainer();
 }
+
 
 function renderMessages(otherUser, currentUser) {
     const chatMessages = document.getElementById(`chat-messages-${otherUser}`);
@@ -228,32 +238,20 @@ async function openChat(sender, receiver) {
     const chatWindow = document.createElement("div");
     chatWindow.id = `chat-window-${receiver}`;
     chatWindow.innerHTML = `
-      <div class="chat-header" style="display:flex; justify-content:space-between; padding:5px;">
+        <div class="chat-header">
         <h3>Chat with ${receiver}</h3>
-        <button id="close-chat-${receiver}" style="cursor:pointer;">×</button>
-      </div>
-      <div id="chat-messages-${receiver}" class="chat-messages" style="flex-grow:1; overflow-y:auto; border-bottom:1px solid #ccc;"></div>
-      <form id="chat-form-${receiver}" style="display:flex;">
-        <input type="text" id="chat-message-${receiver}" required style="flex-grow:1;" />
-        <button type="submit">Send</button>
-      </form>
+        <button id="close-chat-${receiver}" class="chat-close-btn">❌</button>
+        </div>
+    
+        <div id="chat-messages-${receiver}" class="chat-messages"></div>
+    
+        <form id="chat-form-${receiver}" class="chat-form">
+        <input type="text" id="chat-message-${receiver}" required class="chat-input" />
+        <button type="submit" class="chat-send-btn">Send</button>
+        </form>
     `;
 
-    Object.assign(chatWindow.style, {
-        position: "fixed",
-        bottom: "0",
-        right: "0",
-        width: "400px",
-        height: "450px",
-        border: "1px solid black",
-        backgroundColor: "white",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        padding: "10px",
-        zIndex: "1000",
-        boxShadow: "0 0 10px rgba(0,0,0,0.2)"
-    });
+    chatWindow.classList.add("chat-window");
 
     document.getElementById("content").appendChild(chatWindow);
 
