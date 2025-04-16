@@ -1,3 +1,4 @@
+
 function loadHeader() {
     const header = document.getElementById("header");
     header.innerHTML = `

@@ -15,8 +15,8 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-var clients = make(map[*websocket.Conn]string)     // Maps connection → userID
-var usersOnline = make(map[string]*websocket.Conn) // Maps userID → connection
+var clients = make(map[*websocket.Conn]string)
+var usersOnline = make(map[string]*websocket.Conn)
 var mutex = &sync.Mutex{}
 
 func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
