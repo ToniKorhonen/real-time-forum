@@ -23,12 +23,21 @@ function initWebSocket(userData) {
             console.log("Received message via WebSocket:", msg);
             
             // If this is a new message (not history loading), display it
+            if (msg.type === "typing") {
+                const otherUser = msg.senderID === currentUsername ? msg.receiverID : msg.senderID;
+                const indicator = document.getElementById(`typing-indicator-${otherUser}`);
+                if (indicator) {
+                    indicator.style.display = msg.stop ? "none" : "block";
+                }
+                return; // do not treat typing as a real message
+            }
+            
             if (msg.senderID === currentUsername || msg.receiverID === currentUsername) {
-                // Import the display function to handle the message
                 import("./chat.js").then(module => {
                     module.displayChatMessage(msg, currentUsername);
                 });
             }
+            
         } catch (error) {
             console.error("Error processing WebSocket message:", error);
         }

@@ -1,10 +1,9 @@
 import { getSocket } from "./websocket.js";
 
 const pageSize = 10;
-const chatState = {}; // { [receiverID]: { offset, total, messages, isLoading, unreadCount } }
-const notificationSound = new Audio('../assets/notification.mp3'); // Add a notification sound file to your project
+const chatState = {};
+const notificationSound = new Audio('../assets/notification.mp3');
 
-// Create a notifications container
 function createNotificationsContainer() {
     const container = document.createElement("div");
     container.id = "notifications-container";
@@ -20,9 +19,7 @@ function createNotificationsContainer() {
 
 async function usersOnline(userData) {
     const oldWrapper = document.getElementById("top-left-wrapper");
-    if (oldWrapper) {
-        oldWrapper.remove(); // remove the whole thing
-    }
+    if (oldWrapper) oldWrapper.remove();
     const header = document.getElementById("header");
 
     let wrapper = document.getElementById("top-left-wrapper");
@@ -32,26 +29,23 @@ async function usersOnline(userData) {
         document.body.prepend(wrapper);
     }
 
-    // Create the actual container first
     const onlineUsersContainer = document.createElement("div");
     onlineUsersContainer.id = "online-users-container";
-    
+
     const titleWrapper = document.createElement("div");
     titleWrapper.classList.add("users-title-wrapper");
-    
+
     const img = document.createElement("img");
     img.src = "/static/assets/users.png";
     img.alt = "Users Icon";
     img.classList.add("users-icon");
-    
+
     const nameSpan = document.createElement("span");
-    nameSpan.textContent = "Users Online"; // or your custom text
+    nameSpan.textContent = "Users Online";
     nameSpan.classList.add("user-label");
-    
+
     titleWrapper.appendChild(img);
     titleWrapper.appendChild(nameSpan);
-
-    // Add to the main container
     onlineUsersContainer.appendChild(titleWrapper);
 
     const usersList = document.createElement("ul");
@@ -91,10 +85,8 @@ async function usersOnline(userData) {
 
     onlineUsersContainer.appendChild(usersList);
     wrapper.appendChild(onlineUsersContainer);
-
     createNotificationsContainer();
 }
-
 
 function renderMessages(otherUser, currentUser) {
     const chatMessages = document.getElementById(`chat-messages-${otherUser}`);
@@ -103,7 +95,6 @@ function renderMessages(otherUser, currentUser) {
     chatMessages.style.flexDirection = "column";
 
     const messages = chatState[otherUser].messages;
-
     messages.forEach(msg => {
         const div = createChatMessageElement(msg, currentUser);
         chatMessages.appendChild(div);
@@ -118,7 +109,6 @@ function isChatOpen(username) {
 }
 
 function addNotification(sender, message) {
-    // Update badge counter
     const badge = document.getElementById(`notification-badge-${sender}`);
     if (badge) {
         if (badge.style.display === "none") {
@@ -128,25 +118,21 @@ function addNotification(sender, message) {
             badge.textContent = parseInt(badge.textContent) + 1;
         }
     }
-    
-    // Add to chat state
+
     if (chatState[sender]) {
         chatState[sender].unreadCount = (chatState[sender].unreadCount || 0) + 1;
     } else {
         chatState[sender] = { unreadCount: 1, messages: [], isLoading: false, topOffset: 0, total: 0 };
     }
-    
-    // Create toast notification
+
     createToastNotification(sender, message);
-    
-    // Play sound
     notificationSound.play().catch(err => console.log("Error playing notification sound:", err));
 }
 
 function createToastNotification(sender, message) {
     const container = document.getElementById("notifications-container") || createNotificationsContainer();
-    
     const toast = document.createElement("div");
+
     Object.assign(toast.style, {
         backgroundColor: "rgba(0,0,0,0.8)",
         color: "white",
@@ -158,28 +144,26 @@ function createToastNotification(sender, message) {
         maxWidth: "300px",
         wordBreak: "break-word"
     });
-    
+
     const header = document.createElement("div");
     header.textContent = `New message from ${sender}`;
     header.style.fontWeight = "bold";
     header.style.marginBottom = "5px";
-    
+
     const content = document.createElement("div");
     content.textContent = message.length > 50 ? message.substring(0, 50) + "..." : message;
-    
+
     toast.appendChild(header);
     toast.appendChild(content);
-    
-    // Click to open chat
+
     toast.addEventListener("click", () => {
         openChat(getCurrentUsername(), sender);
         clearNotifications(sender);
         toast.remove();
     });
-    
+
     container.appendChild(toast);
-    
-    // Auto-remove after 5 seconds
+
     setTimeout(() => {
         if (toast.parentNode) {
             toast.remove();
@@ -188,40 +172,30 @@ function createToastNotification(sender, message) {
 }
 
 function getCurrentUsername() {
-    // You might need to adjust this based on how you're storing the current user info
     return document.querySelector('[data-current-user]')?.dataset.currentUser || "User";
 }
 
 function clearNotifications(username) {
-    // Clear badge
     const badge = document.getElementById(`notification-badge-${username}`);
     if (badge) {
         badge.style.display = "none";
         badge.textContent = "0";
     }
-    
-    // Clear chat state counter
+
     if (chatState[username]) {
         chatState[username].unreadCount = 0;
     }
-    
-    // Update document title
+
     updateDocumentTitle();
 }
 
 function updateDocumentTitle() {
-    // Calculate total unread messages
     let totalUnread = 0;
     Object.values(chatState).forEach(state => {
         totalUnread += state.unreadCount || 0;
     });
-    
-    // Update title
-    if (totalUnread > 0) {
-        document.title = `(${totalUnread}) Chat App`;
-    } else {
-        document.title = "Chat App";  // Replace with your actual app name
-    }
+
+    document.title = totalUnread > 0 ? `(${totalUnread}) Chat App` : "Chat App";
 }
 
 async function openChat(sender, receiver) {
@@ -250,9 +224,7 @@ async function openChat(sender, receiver) {
         <button type="submit" class="chat-send-btn">Send</button>
         </form>
     `;
-
     chatWindow.classList.add("chat-window");
-
     document.getElementById("content").appendChild(chatWindow);
 
     document.getElementById(`close-chat-${receiver}`).addEventListener("click", () => {
@@ -261,6 +233,35 @@ async function openChat(sender, receiver) {
 
     const chatForm = document.getElementById(`chat-form-${receiver}`);
     const chatInput = document.getElementById(`chat-message-${receiver}`);
+    
+    let isTyping = false;
+    let typingTimeout;
+
+    chatInput.addEventListener("input", () => {
+        const socket = getSocket();
+        if (!socket || socket.readyState !== WebSocket.OPEN) return;
+
+        if (!isTyping) {
+            isTyping = true;
+            socket.send(JSON.stringify({
+                type: "typing",
+                senderID: sender,
+                receiverID: receiver,
+                stop: false
+            }));
+        }
+
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+            isTyping = false;
+            socket.send(JSON.stringify({
+                type: "typing",
+                senderID: sender,
+                receiverID: receiver,
+                stop: true
+            }));
+        }, 1500);
+    });
 
     chatForm.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -269,6 +270,7 @@ async function openChat(sender, receiver) {
         if (!message) return;
 
         const msgObj = {
+            type: "chat", // ✅ this is the only change
             senderID: sender,
             receiverID: receiver,
             content: message,
@@ -293,38 +295,45 @@ async function openChat(sender, receiver) {
     chatState[receiver] = {
         topOffset: initialOffset,
         total: result.total,
-        messages: result.messages.reverse(), // make it oldest → newest
+        messages: result.messages.reverse(),
         isLoading: false,
         unreadCount: 0
     };
 
     renderMessages(receiver, sender);
-    clearNotifications(receiver);  // Clear any pending notifications
+    clearNotifications(receiver);
 
     const chatMessages = document.getElementById(`chat-messages-${receiver}`);
+    const typingIndicator = document.createElement("div");
+    typingIndicator.id = `typing-indicator-${receiver}`;
+    typingIndicator.className = "typing-indicator";
+    typingIndicator.style.display = "none";
+    typingIndicator.style.fontStyle = "italic";
+    typingIndicator.style.color = "red";
+    typingIndicator.style.marginTop = "4px";
+    typingIndicator.textContent = `${receiver} is typing...`;
+    typingIndicator.style.animation = "blink 1s infinite";
+
+    chatMessages.after(typingIndicator);
 
     chatMessages.addEventListener("scroll", throttle(async () => {
         const state = chatState[receiver];
         const atTop = chatMessages.scrollTop <= 2;
-    
         if (state.isLoading || !atTop || state.topOffset + pageSize >= state.total) return;
-    
-        console.log("🟢 Scrolled to top — fetching more messages...");
-    
+
         state.isLoading = true;
         const newOffset = state.topOffset + pageSize;
         const result = await fetchMessagesPage(sender, receiver, newOffset);
         const prevHeight = chatMessages.scrollHeight;
-    
+
         state.messages = [...result.messages.reverse(), ...state.messages];
         state.topOffset = newOffset;
-    
+
         renderMessages(receiver, sender);
         await new Promise(requestAnimationFrame);
         chatMessages.scrollTop = chatMessages.scrollHeight - prevHeight;
-        
         state.isLoading = false;
-    }, 10));    
+    }, 10));
 }
 
 async function fetchMessagesPage(currentUser, otherUser, offset) {
@@ -332,30 +341,23 @@ async function fetchMessagesPage(currentUser, otherUser, offset) {
     if (!response.ok) throw new Error("Failed to fetch messages");
 
     const result = await response.json();
-    const messages = result.messages
-        .filter(
-            msg =>
-                (msg.senderID === currentUser && msg.receiverID === otherUser) ||
-                (msg.senderID === otherUser && msg.receiverID === currentUser)
-        ); // backend gives us DESC now, we reverse it on frontend
+    const messages = result.messages.filter(
+        msg =>
+            (msg.senderID === currentUser && msg.receiverID === otherUser) ||
+            (msg.senderID === otherUser && msg.receiverID === currentUser)
+    );
 
-    return {
-        messages,
-        offset: result.offset,
-        total: result.total,
-    };
+    return { messages, offset: result.offset, total: result.total };
 }
 
 function displayChatMessage(msg, currentUsername) {
     const isSender = msg.senderID === currentUsername;
     const chatPartner = isSender ? msg.receiverID : msg.senderID;
 
-    // Store in chat state if it exists
     if (chatState[chatPartner]) {
         chatState[chatPartner].messages.push(msg);
     }
 
-    // If message is incoming and chat window is not open, show notification
     if (!isSender && !isChatOpen(chatPartner)) {
         addNotification(chatPartner, msg.content);
     }
@@ -403,23 +405,19 @@ function throttle(fn, limit) {
     };
 }
 
-// Initialize notifications when websocket connects
 function initializeNotifications() {
     const socket = getSocket();
     if (socket) {
         const originalOnMessage = socket.onmessage;
-        
+
         socket.onmessage = function(event) {
-            // Call the original handler if it exists
             if (originalOnMessage) {
                 originalOnMessage.call(socket, event);
             }
-            
+
             try {
                 const data = JSON.parse(event.data);
-                // If it's a chat message and not from current user
                 if (data.type === 'message' && data.senderID !== getCurrentUsername()) {
-                    // Handle notification
                     if (!isChatOpen(data.senderID)) {
                         addNotification(data.senderID, data.content);
                     }
@@ -430,6 +428,26 @@ function initializeNotifications() {
         };
     }
 }
+(function handleTypingEvents() {
+    const socket = getSocket();
+    if (!socket) return;
 
-// Export the initializeNotifications function
+    socket.addEventListener("message", (event) => {
+        try {
+            const data = JSON.parse(event.data);
+            if (data.type === "typing") {
+                const currentUser = getCurrentUsername();
+                const otherUser = data.senderID === currentUser ? data.receiverID : data.senderID;
+                const indicator = document.getElementById(`typing-indicator-${otherUser}`);
+
+                if (!indicator) return;
+                indicator.style.display = data.stop ? "none" : "block";
+            }
+        } catch (e) {
+            console.error("Error handling typing event:", e);
+        }
+    });
+})();
+
+
 export { usersOnline, displayChatMessage, initializeNotifications };

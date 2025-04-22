@@ -35,9 +35,11 @@ type Session struct {
 }
 
 type Message struct {
+	Type       string    `json:"type"` // "chat" ou "typing"
 	SenderID   string    `json:"senderID"`
 	ReceiverID string    `json:"receiverID"`
-	Content    string    `json:"content"`
+	Content    string    `json:"content,omitempty"`
+	Stop       bool      `json:"stop,omitempty"` // pour signaler l'arrêt de la saisie
 	Timestamp  time.Time `json:"timestamp"`
 }
 

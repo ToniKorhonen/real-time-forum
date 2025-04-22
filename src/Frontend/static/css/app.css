@@ -363,6 +363,8 @@ form button:hover {
     margin-bottom: 0; /* <-- important */
     background-color: #fffce0;
     font-size: 0.95rem;
+
+
     line-height: 1.4;
   }  
   
@@ -402,6 +404,13 @@ form button:hover {
     background-color: #e67e22;
     color: #fff;
   }
+
+@keyframes blink {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
   
 /* Responsive */
 @media screen and (max-width: 768px) {

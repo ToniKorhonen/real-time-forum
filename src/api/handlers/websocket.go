@@ -69,33 +69,39 @@ func HandleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Println("Received message:", msg)
 
-		// Save the message to the database
-		err = data.SaveMessage(msg.SenderID, msg.ReceiverID, msg.Content)
-		if err != nil {
-			fmt.Println("Error saving message:", err)
-		}
-
 		mutex.Lock()
 		receiverConn, receiverOnline := usersOnline[msg.ReceiverID]
 		senderConn := usersOnline[msg.SenderID]
 		mutex.Unlock()
 
-		// Always send the message back to the sender
-		if senderConn != nil {
-			err = senderConn.WriteJSON(msg)
+		switch msg.Type {
+		case "chat":
+			// Enregistre dans la DB
+			err = data.SaveMessage(msg.SenderID, msg.ReceiverID, msg.Content)
 			if err != nil {
-				fmt.Println("Error sending message to sender:", err)
+				fmt.Println("Error saving message:", err)
 			}
-		}
 
-		// Send the message to the receiver if online
-		if receiverOnline {
-			err = receiverConn.WriteJSON(msg)
-			if err != nil {
-				fmt.Println("Error sending message to receiver:", err)
+			// Renvoyer au sender
+			if senderConn != nil {
+				_ = senderConn.WriteJSON(msg)
 			}
-		} else {
-			fmt.Println("User", msg.ReceiverID, "is offline. Message saved in DB.")
+
+			// Renvoyer au receiver s’il est connecté
+			if receiverOnline {
+				_ = receiverConn.WriteJSON(msg)
+			} else {
+				fmt.Println("User", msg.ReceiverID, "is offline. Message saved in DB.")
+			}
+
+		case "typing":
+			// Typing event => juste forwarder sans stocker
+			if receiverOnline {
+				err := receiverConn.WriteJSON(msg)
+				if err != nil {
+					fmt.Println("Error sending typing event:", err)
+				}
+			}
 		}
 	}
 }
