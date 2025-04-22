@@ -1,7 +1,8 @@
 import { loadLoginForm } from "./login.js";
 import { loadRegisterForm } from "./register.js";
 import { loadCreatePostForm, loadPosts } from "./posts.js";
-import { usersOnline } from "./chat.js";
+import { initializeChat } from "./chatIndex.js";
+import {usersOnline} from "./chatUI.js"
 
 function loadMainContent(userData, pushState = true) {
   const content = document.getElementById("content");

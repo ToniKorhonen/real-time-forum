@@ -1,5 +1,5 @@
 import { renderLayout } from "./layout.js";
-import { initializeNotifications } from "./chat.js";
+import { initializeNotifications } from "./chatNotifications.js";
 
 
 document.addEventListener("DOMContentLoaded", async () => {

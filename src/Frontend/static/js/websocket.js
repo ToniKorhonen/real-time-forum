@@ -33,7 +33,7 @@ function initWebSocket(userData) {
             }
             
             if (msg.senderID === currentUsername || msg.receiverID === currentUsername) {
-                import("./chat.js").then(module => {
+                import("./chatUI.js").then(module => {
                     module.displayChatMessage(msg, currentUsername);
                 });
             }
